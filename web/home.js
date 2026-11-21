@@ -107,19 +107,21 @@
 
   /** Shelf apps in this order when installed, like the Android app: key, LG app id, name on the TV, brand gradient. */
   var SHELF = [
-    ['netflix', /^netflix$/, /netflix/i, ['#0A0A0A', '#000000']],
-    ['youtube', /youtube/, /^youtube$/i, ['#1C1C1E', '#09090A']],
-    ['prime', /^amazon$/, /prime video|amazon/i, ['#2AA8FF', '#0A68D4']],
+    ['netflix', /^netflix$/, /netflix/i, ['#0A0A0A', '#000000'], 'netflix.svg'],
+    ['youtube', /youtube/, /^youtube$/i, ['#1C1C1E', '#09090A'], 'youtube.svg'],
+    ['prime', /^amazon$/, /prime video|amazon/i, ['#2AA8FF', '#0A68D4'], 'prime.png'],
     ['disney', /disney/, /disney/i, ['#173584', '#08143F']],
-    ['max', /hbo|wbd/, /^(hbo )?max$|hbo max/i, ['#5C30E8', '#221684']],
-    ['appletv', /appletv|apple\.tv/, /apple tv/i, ['#1C1C1E', '#000000']],
+    ['max', /hbo|wbd/, /^(hbo )?max$|hbo max/i, ['#5C30E8', '#221684'], 'max.svg'],
+    ['appletv', /appletv|apple\.tv/, /apple tv/i, ['#1C1C1E', '#000000'], 'appletv.svg'],
     ['hulu', /^hulu/, /hulu/i, ['#1CE783', '#0B8F4E']],
-    ['paramount', /paramount|cbs/, /paramount/i, ['#0064FF', '#002A86']],
+    ['paramount', /paramount|cbs/, /paramount/i, ['#0064FF', '#002A86'], 'paramountplus.svg'],
     ['peacock', /peacock/, /peacock/i, ['#1C1C1E', '#000000']],
     ['nfl', /nfl/, /^nfl/i, ['#013369', '#00163D']],
     ['globoplay', /globoplay/, /globoplay/i, ['#FF8A1F', '#FF2D5A']],
-    ['jellyfin', /jellyfin/i, /jellyfin/i, ['#AA5CC3', '#00A4DC']],
-    ['spotify', /spotify/, /spotify/i, ['#1DB954', '#0F7A36']]
+    ['jellyfin', /jellyfin/i, /jellyfin/i, ['#AA5CC3', '#00A4DC'], 'jellyfin.svg'],
+    ['spotify', /spotify/, /spotify/i, ['#1DB954', '#0F7A36'], 'spotify.svg'],
+    ['plex', /^cdp-30$|plex/i, /^plex$/i, ['#E5A00D', '#8A5F05'], 'plex.svg'],
+    ['twitch', /twitch/, /^twitch$/i, ['#9146FF', '#4B1FA8'], 'twitch.svg']
   ];
   // Apps shown at once, as on Android: 8 (today's smallest tiles, 178 wide); the shelf scrolls for the rest. The
   // built-in list keeps 8 too.
@@ -358,9 +360,14 @@
     }
   }
 
-  /** An app's face: its logo on its brand color (or its name, when the icon can't be read). */
-  function face(app, box, wordSize) {
+  /** An app's face: its logo on its brand color (or its name, when the icon can't be read). On the shelf, an app with a
+   *  white logo in icons/mono shows that instead (design Decision 16). */
+  function face(app, box, wordSize, onShelf) {
     var k = shelfKey(app);
+    if (onShelf && k && k[4]) {
+      el('img', 'mono', box).src = 'icons/mono/' + k[4];
+      return;
+    }
     var top = k ? k[3][0] : app.color ? darken(app.color, 0.92) : '#2A2A2E';
     var bottom = k ? k[3][1] : app.color ? darken(app.color, 0.62) : '#161618';
     paint(box, top, bottom);
@@ -679,7 +686,7 @@
       t.style.top = (platterTop + pad) + 'px';
       t.style.width = tw + 'px';
       t.style.height = th + 'px';
-      face(shelf[i], t, wordFit(shelf[i].title, tw, 30));
+      face(shelf[i], t, wordFit(shelf[i].title, tw, 30), true);
       el('div', 'label', t, I18N.name(shelf[i].title));
       hover(t, Z.SHELF, i);
     }

@@ -1,0 +1,6 @@
+White shelf logos (design Decision 16).
+netflix, youtube, max, appletv, spotify, paramountplus, jellyfin, plex, twitch: Simple Icons 16.38.0
+(https://github.com/simple-icons/simple-icons/tree/16.38.0/icons), CC0 1.0. Changes: title removed, fill set to white,
+width and height added.
+prime.png: web/icons/prime.png with every pixel turned white and its alpha kept.
+Brand marks remain their owners' trademarks; they name the app on its own launcher tile.

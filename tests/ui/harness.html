@@ -244,6 +244,25 @@ var CASES = {
       });
     }
   },
+  // Breaks if a shelf app with a bundled white logo shows anything else (its word, a brand icon), or if an app with no
+  // logo loses its name (Decision 16: our white logo, else the app's icon, else its name in white).
+  'tiles-mono': {
+    check: function (win, doc) {
+      var tiles = doc.querySelectorAll('#tiles .tile'), netflix = null, disney = null;
+      for (var i = 0; i < tiles.length; i++) {
+        var name = tiles[i].querySelector('.label').textContent.trim();
+        if (name === 'Netflix') netflix = tiles[i];
+        if (name === 'Disney+') disney = tiles[i];
+      }
+      if (!netflix || !disney) return 'Netflix or Disney+ is not on the shelf';
+      var img = netflix.querySelector('img');
+      if (!img || !/icons\/mono\/netflix\.svg$/.test(img.getAttribute('src') || '')) return 'Netflix tile shows ' + (img ? img.getAttribute('src') : 'no logo');
+      if (disney.querySelector('img')) return 'Disney+ tile has an image';
+      var word = disney.querySelector('.word');
+      if (!word || win.getComputedStyle(word).visibility === 'hidden' || word.textContent.trim() !== 'Disney+') return 'Disney+ tile shows no name';
+      return '';
+    }
+  },
   // Motion inventory (transform and opacity only, never layout or colour): breaks if the clock, weather line or shelf
   // has no entrance, if that entrance animates anything else, or if any of them or the horizon transitions anything else.
   'motion-props': {

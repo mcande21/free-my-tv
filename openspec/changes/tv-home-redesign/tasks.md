@@ -91,7 +91,7 @@ needs Google Chrome and Python 3).
       mission's scratch on screenshots of all four phases, expect some text box under 3:1 before the scrim ·
       change · rerun, expect every box at or over 3:1 · gate, expect PASS · commit "feat(web): text stays readable
       over the photos"
-- [ ] 3.9 white logos (design Decision 16; spec: Shelf tiles share one surface): fetch the nine Simple Icons 16.38.0
+- [x] 3.9 white logos (design Decision 16; spec: Shelf tiles share one surface): fetch the nine Simple Icons 16.38.0
       SVGs by `gh api repos/simple-icons/simple-icons/contents/icons/<name>.svg?ref=16.38.0`, set `fill="#FFFFFF"`
       and a width and height, into `web/icons/mono/`; make `mono/prime.png` from `icons/prime.png` (RGB to white,
       alpha kept) with a Pillow script kept in the mission scratch, not the repo; `web/icons/mono/CREDITS.txt`
