@@ -631,11 +631,21 @@
     [372, [[28, 520, 2.4], [14, 140, 0.7], [6, 47, 3.1]]],
     [430, [[22, 640, 5.1], [11, 120, 2.2], [5, 39, 0.9]]]
   ];
-  var horizonPhase = '';
+  var horizonPhase = '', horizonFading = false;
 
+  /** The first sky is drawn at once; a later phase fades the old one out (1 s, home.css), is drawn, and fades in. */
   function updateHorizon() {
     var w = Data.weather, phase = Sun.phase(Date.now(), w ? w.sunrise : 0, w ? w.sunset : 0);
-    if (phase !== horizonPhase) drawHorizon(phase);
+    if (phase === horizonPhase || horizonFading) return;
+    if (!horizonPhase) { drawHorizon(phase); return; }
+    var canvas = $('horizon');
+    horizonFading = true;
+    canvas.className = 'fading';
+    setTimeout(function () {
+      drawHorizon(phase);
+      canvas.className = '';
+      horizonFading = false;
+    }, 1000);
   }
 
   function drawHorizon(phase) {

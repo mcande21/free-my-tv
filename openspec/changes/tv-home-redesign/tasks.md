@@ -76,7 +76,7 @@ needs Google Chrome and Python 3).
       its name; one tile width, no reflow. Failing test first: case `shelf-focus` moves focus 0 to 1 and asserts
       tile 1 has a visible name (opacity 1), tile 0's name opacity 0, and tile 2's left edge did not move; run,
       expect FAIL · change · gate, expect PASS · commit "feat(web): shelf focus grows the app"
-- [ ] 3.5 motion (design Decision 8): entrance stagger for `#clock`, `#weatherline`, `#tiles` (translateY 24 px and
+- [x] 3.5 motion (design Decision 8): entrance stagger for `#clock`, `#weatherline`, `#tiles` (translateY 24 px and
       opacity, 420 ms, 80 ms apart), sky 2 s crossfade. Failing test first: case `motion-props` asserts the three
       elements' computed `transition-property` lists only `transform` and/or `opacity`; run, expect FAIL · change · gate, expect PASS · commit
       "feat(web): entrance and sky motion"

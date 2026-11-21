@@ -72,9 +72,18 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #sky .day { background: -webkit-linear-gradient(top, #E9E4DC, #DCD5CA); background: linear-gradient(#E9E4DC, #DCD5CA); }
 #sky .night { background: -webkit-linear-gradient(top, #1E2631, #151A21); background: linear-gradient(#1E2631, #151A21); opacity: 0; }
 #sky canvas { position: absolute; left: -4%; top: -4%; width: 108%; height: 108%; opacity: 0; -webkit-transition: opacity 0.8s; transition: opacity 0.8s; }
+/* Entrance (motion inventory: hierarchy): the clock, the weather line and the shelf rise in, 80 ms apart. "backwards"
+   holds only the start state during the delay, so the shelf's own sliding transform is never pinned afterwards. */
+@-webkit-keyframes rise { from { opacity: 0; -webkit-transform: translateY(24px); } to { opacity: 1; -webkit-transform: translateY(0); } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+#clock, #weatherline, #tiles { -webkit-animation: rise 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; animation: rise 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+#weatherline { -webkit-animation-delay: 0.08s; animation-delay: 0.08s; }
+#tiles { -webkit-animation-delay: 0.16s; animation-delay: 0.16s; }
 #sky canvas.on { opacity: 1; }
 /* The horizon (home.js drawHorizon): over the veil, full bleed, in the no-picks state only. */
-#sky #horizon { display: none; left: 0; top: 0; width: 100%; height: 100%; opacity: 1; }
+/* State transition: a new phase fades the old sky out and the new one in (home.js updateHorizon), 1 s each way. */
+#sky #horizon { display: none; left: 0; top: 0; width: 100%; height: 100%; opacity: 1; -webkit-transition: opacity 1s; transition: opacity 1s; }
+#sky #horizon.fading { opacity: 0; }
 .no-picks #sky #horizon { display: block; }
 #sky .veil { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(236, 230, 220, 0.74); -webkit-transition: background-color 2s; transition: background-color 2s; }
 #sky .lift { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #FFF; opacity: 0; -webkit-transition: opacity 0.45s, background-color 2s; transition: opacity 0.45s, background-color 2s; }

@@ -177,6 +177,7 @@ var CASES = {
   },
   // Breaks if the line shows (or the clock moves) when no weather was ever fetched.
   'weather-none': {
+    still: true,
     setup: function () { seed({temperature: 'C', language: 'en'}, null); },
     check: function (win, doc) {
       var line = doc.getElementById('weatherline'), clock = doc.getElementById('clock').getBoundingClientRect();
@@ -227,6 +228,46 @@ var CASES = {
       });
     }
   },
+  // Motion inventory (transform and opacity only, never layout or colour): breaks if the clock, weather line or shelf
+  // has no entrance, if that entrance animates anything else, or if any of them or the horizon transitions anything else.
+  'motion-props': {
+    setup: function (fixture) { seed({temperature: 'C', language: 'en'}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var ALLOWED = ['transform', '-webkit-transform', 'opacity'];
+      function frames(name) {
+        for (var s = 0; s < doc.styleSheets.length; s++) {
+          var rules = doc.styleSheets[s].cssRules;
+          for (var r = 0; r < rules.length; r++) {
+            if ((rules[r].type === 7) && rules[r].name === name) return rules[r];
+          }
+        }
+        return null;
+      }
+      var ids = ['clock', 'weatherline', 'tiles'];
+      for (var i = 0; i < ids.length; i++) {
+        var cs = win.getComputedStyle(doc.getElementById(ids[i]));
+        if (!cs.animationName || cs.animationName === 'none') return '#' + ids[i] + ' has no entrance animation';
+        var kf = frames(cs.animationName);
+        if (!kf) return 'no @keyframes ' + cs.animationName;
+        for (var k = 0; k < kf.cssRules.length; k++) {
+          var st = kf.cssRules[k].style;
+          for (var j = 0; j < st.length; j++) {
+            if (ALLOWED.indexOf(st[j]) < 0) return '@keyframes ' + cs.animationName + ' animates ' + st[j];
+          }
+        }
+      }
+      ids.push('horizon');
+      for (var m = 0; m < ids.length; m++) {
+        var tcs = win.getComputedStyle(doc.getElementById(ids[m]));
+        var props = tcs.transitionProperty.split(/,\s*/), times = tcs.transitionDuration.split(/,\s*/);
+        for (var n = 0; n < props.length; n++) {
+          var lasts = parseFloat(times[n % times.length]) > 0;   // a 0s entry (the default "all 0s") animates nothing
+          if (lasts && ALLOWED.indexOf(props[n]) < 0) return '#' + ids[m] + ' transitions ' + props[n];
+        }
+      }
+      return '';
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;
@@ -255,9 +296,9 @@ function finish(text) { document.getElementById('result').textContent = text; }
     frame.src = '/out/tizen/index.html';
     frame.onload = function () {
       setTimeout(function () {
-        if (c.still) {   // end states only: headless virtual time does not advance CSS transitions
+        if (c.still) {   // end states only: headless virtual time advances neither CSS transitions nor animations
           var st = frame.contentDocument.createElement('style');
-          st.textContent = '*, *::before, *::after { -webkit-transition: none !important; transition: none !important; }';
+          st.textContent = '*, *::before, *::after { -webkit-transition: none !important; transition: none !important; -webkit-animation: none !important; animation: none !important; }';
           frame.contentDocument.head.appendChild(st);
         }
         var report = function (why) { finish(why ? 'FAIL ' + CASE + ': ' + why : 'PASS ' + CASE); };
