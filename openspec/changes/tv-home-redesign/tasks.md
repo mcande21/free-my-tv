@@ -60,11 +60,11 @@ needs Google Chrome and Python 3).
       unchanged), `weather-off` (prefs weather false: hidden); run, expect FAIL · change · gate, expect PASS ·
       commit "feat(web): weather line under the clock"
 - [ ] 3.3 sun phase (spec: Horizon follows the sun): first confirm `grep -rnw Sun web` shows only the `'weekday|Sun'` string at data.js:29. Create
-      `web/sun.js` (global `Sun`, ES5, `Sun.phase(nowMs, sunriseIso, sunsetIso)` per design Decision 4, falling back
-      to clock hours when either ISO string is missing or unparsable) and `tests/WebSunTest.js` (vm sandbox like
+      `web/sun.js` (global `Sun`, ES5, `Sun.phase(nowMs, sunriseMs, sunsetMs)` per design Decision 4, falling back
+      to clock hours when either time is missing, 0 or not a finite number) and `tests/WebSunTest.js` (vm sandbox like
       WebPrefsTest.js) added to `tools/test-web.sh`. Failing tests first, values derived by hand for sunrise 06:58,
       sunset 16:40: 17:00 -> `dusk`; 17:30 -> `night`; 06:30 -> `dawn`; 12:00 -> `day`; no times at 20:00 ->
-      `night`, at 12:00 -> `day`; garbage strings at 12:00 -> `day`. Run, expect FAIL (no web/sun.js) · implement ·
+      `night`, at 12:00 -> `day`; times 0, NaN or undefined at 12:00 -> `day`. Run, expect FAIL (no web/sun.js) · implement ·
       gate, expect PASS · commit "feat(web): sun phase"
 - [ ] 3.6 horizon canvas (spec: Horizon follows the sun): add `<canvas id="horizon" width="960" height="540">` in
       `#sky` and `<script src="sun.js">` before `home.js` in `web/index.html`; in `home.js` `drawHorizon(phase)` draws

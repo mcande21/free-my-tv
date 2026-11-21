@@ -29,7 +29,7 @@ the other surfaces; a UI test that drives the real page.
    It redraws when the phase changes (checked each minute with the clock tick), never per frame. Rejected: CSS
    gradients plus SVG (no filter control on older TVs, larger markup); an image (a fixed look that cannot follow
    the sun).
-4. **Sun phase** from cached `daily.sunrise[0]` and `daily.sunset[0]`: dawn = sunrise - 45 min to sunrise + 30 min;
+4. **Sun phase** from `Data.weather.sunrise` and `.sunset` (epoch ms, which `parseWeather` makes from the cached `daily.sunrise[0]` and `daily.sunset[0]`): dawn = sunrise - 45 min to sunrise + 30 min;
    dusk = sunset - 30 min to sunset + 45 min; day between; night otherwise. No weather: night 19:00-07:00, else day.
 5. **Weather line** reuses `weatherParts()` for the current reading and adds three hourly labels from
    `hourly.time`/`hourly.temperature_2m` after the current hour. Hidden when `Prefs.weather()` is false or no weather.
@@ -42,8 +42,8 @@ the other surfaces; a UI test that drives the real page.
    map (same app names, Phosphor regular glyph names) rendered from `Phosphor.ttf` of `@phosphor-icons/web` 2.1.2
    (MIT), `LICENSE-phosphor` beside them. Pillow runs from a throwaway virtualenv; a tool dependency only. Rejected:
    overwriting `app/assets/symbols/` (changes the Google TV app, a no-go).
-11. **Sun phase in its own file:** `web/sun.js` defines a global `Sun` (ES5) with `Sun.phase(nowMs, sunriseIso,
-    sunsetIso)`, so `tests/WebSunTest.js` tests it in Node the way `tests/WebPrefsTest.js` tests `Prefs`;
+11. **Sun phase in its own file:** `web/sun.js` defines a global `Sun` (ES5) with `Sun.phase(nowMs, sunriseMs,
+    sunsetMs)`, falling back to clock hours when either time is missing, 0 or not a finite number, so `tests/WebSunTest.js` tests it in Node the way `tests/WebPrefsTest.js` tests `Prefs`;
     `webapp.files()` already packs every top-level file in `web/`. `index.html` loads it before `home.js`.
 12. **Font licence in the package:** `webapp.files()` copies only `.woff2` from `web/fonts/`; it also copies
     `OFL-outfit-geist.txt` from there so the OFL travels with the fonts.
@@ -111,4 +111,5 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 ## Rulings
 
 - 2026-11-20: direction Front Range dusk; layout Horizon stage; delivery through the owner's fork. (Morpheus)
+- 2026-11-21: T2 amendment: Sun.phase takes epoch ms, not ISO strings (Decisions 4 and 11, task 3.3); Data.weather already holds ms and data.js owns parsing. (Morpheus)
 - 2026-11-21: plan approved with both simplify findings adopted: 2.1 tests that the old greys and black shadows are gone instead of one exact background; 3.5 tests transform/opacity only, no exact delays. (Morpheus)
