@@ -5,6 +5,12 @@
  * No CSS variables, grid or backdrop-filter: older LG TVs (webOS 3 and 4) don't have them, and blur is too heavy for
  * their GPUs. Only transform and opacity animate.
  */
+/* Front Range type: Outfit for the time and headings, Geist for the interface (web/fonts, latin subsets, OFL: see
+   web/fonts/OFL-outfit-geist.txt). Inter below stays in the stack for the scripts these subsets lack. */
+@font-face { font-family: 'Outfit'; src: url('fonts/Outfit-300.woff2') format('woff2'); font-weight: 300; font-style: normal; }
+@font-face { font-family: 'Outfit'; src: url('fonts/Outfit-500.woff2') format('woff2'); font-weight: 500; font-style: normal; }
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-400.woff2') format('woff2'); font-weight: 400; font-style: normal; }
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-600.woff2') format('woff2'); font-weight: 600; font-style: normal; }
 /* Inter in fixed weights (rsms/inter 4.1, web/fonts): Chromium before 62 (webOS 3 and 4, Tizen 3) can't use a variable
    font's weights nor a "100 900" range. Measured on a 2016 LG (webOS 3.4): with the variable font alone, text at 200, 400
    and 700 drew alike (the same width, 1102 px); with these, 700 is 1128 px. A TV loads only the weights a page shows,

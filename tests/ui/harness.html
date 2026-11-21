@@ -38,6 +38,19 @@ function seed(prefs, weatherBody) {
 }
 
 var CASES = {
+  // Breaks if Outfit 300 or Geist 400 is not declared as a local @font-face the page can load.
+  'fonts-loaded': {
+    check: function (win, doc) {
+      var want = [['300 96px Outfit', 'Outfit'], ['400 32px Geist', 'Geist']];
+      return Promise.all(want.map(function (w) { return doc.fonts.load(w[0]); })).then(function (sets) {
+        for (var i = 0; i < sets.length; i++) {
+          var ok = sets[i].some(function (f) { return f.family.replace(/["']/g, '') === want[i][1] && f.status === 'loaded'; });
+          if (!ok) return want[i][1] + ' did not load';
+        }
+        return '';
+      });
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;
@@ -56,9 +69,11 @@ function finish(text) { document.getElementById('result').textContent = text; }
     frame.src = '/out/tizen/index.html';
     frame.onload = function () {
       setTimeout(function () {
+        var report = function (why) { finish(why ? 'FAIL ' + CASE + ': ' + why : 'PASS ' + CASE); };
         var why;
-        try { why = c.check(frame.contentWindow, frame.contentDocument); } catch (e) { why = 'check threw ' + e; }
-        finish(why ? 'FAIL ' + CASE + ': ' + why : 'PASS ' + CASE);
+        try { why = c.check(frame.contentWindow, frame.contentDocument); } catch (e) { report('check threw ' + e); return; }
+        if (why && typeof why.then === 'function') why.then(report, function (e) { report('check rejected ' + e); });
+        else report(why);
       }, c.wait || 1500);
     };
     document.body.appendChild(frame);

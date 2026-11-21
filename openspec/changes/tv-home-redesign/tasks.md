@@ -15,7 +15,7 @@ needs Google Chrome and Python 3).
       Denver, sunset 16:40, hourly 15:00-23:00, written by hand). First case `harness-loads`: asserts the iframe body
       has class `no-picks`. Run `tests/ui/run.sh`, expect PASS (it proves the harness, not a feature) · commit
       "test(ui): headless harness for the home screen"
-- [ ] 1.2 fonts: add `web/fonts/Outfit-300.woff2`, `Outfit-500.woff2`, `Geist-400.woff2`, `Geist-600.woff2` from
+- [x] 1.2 fonts: add `web/fonts/Outfit-300.woff2`, `Outfit-500.woff2`, `Geist-400.woff2`, `Geist-600.woff2` from
       `@fontsource/outfit@5.3.0` and `@fontsource/geist-sans@5.3.0` (latin subset) and `web/fonts/OFL-outfit-geist.txt`. Failing
       test first: case `fonts-loaded` asserts `document.fonts.check('300 96px Outfit')` and
       `document.fonts.check('400 32px Geist')` in the iframe; run, expect FAIL (no faces declared) · add the four
