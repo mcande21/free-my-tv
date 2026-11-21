@@ -745,6 +745,22 @@
       q.style.width = (1840 - left) + 'px';
       renderPrices(q, coins);
     }
+    renderWeatherLine();
+  }
+
+  /** Under the clock: now (temperature and condition), then the next three hours. Hidden with no weather or weather off. */
+  function renderWeatherLine() {
+    var line = $('weatherline'), w = Data.weather;
+    line.innerHTML = '';
+    if (!Prefs.weather() || !w) { line.className = ''; return; }
+    el('span', 'now', line, Data.degrees(w.temp));
+    el('span', 'cond', line, Data.condition(w.code, w.isDay));
+    for (var i = 0; i < 3 && w.hours && i < w.hours.length; i++) {
+      var h = el('span', 'hour', line);
+      el('span', 't', h, Data.hour(w.hours[i].at));
+      el('span', 'd', h, Data.degrees(w.hours[i].temp));
+    }
+    line.className = 'on';
   }
 
   function renderWeather(card) {

@@ -20,7 +20,9 @@ cases=("$@")
 [ ${#cases[@]} -gt 0 ] || { echo "tests/ui: no cases found" >&2; exit 2; }
 failed=0
 for c in "${cases[@]}"; do
+  # Offline but for this server: cases run on their seeded data only, never on live weather or prices.
   out="$("$CHROME" --headless=new --disable-gpu --hide-scrollbars --user-data-dir="$profile/$c" \
+    --host-resolver-rules="MAP * ~NOTFOUND, EXCLUDE 127.0.0.1" \
     --window-size=1920,1080 --virtual-time-budget=10000 --dump-dom \
     "http://127.0.0.1:$PORT/tests/ui/harness.html?case=$c" 2>/dev/null)"
   line="$(printf '%s' "$out" | sed -n 's/.*<pre id="result">\([^<]*\)<\/pre>.*/\1/p')"

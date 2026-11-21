@@ -329,6 +329,16 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   display: none;
 }
 #clock .date { display: block; font-family: 'Geist', 'Inter', 'Helvetica Neue', Arial, sans-serif; font-size: 40px; font-weight: 500; letter-spacing: 0; margin-top: 18px; color: #5F6672; }
+/* The weather line under the date: now in ink, the next three hours muted, numbers in tabular figures. */
+#weatherline { position: absolute; left: 96px; top: 300px; display: none; font-size: 32px; font-weight: 400; color: #5F6672; white-space: nowrap; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
+.no-picks #weatherline.on { display: block; }
+#weatherline .now { color: #1C2128; font-weight: 600; margin-right: 14px; }
+#weatherline .cond { margin-right: 40px; }
+#weatherline .hour { margin-right: 32px; }
+#weatherline .hour .t { margin-right: 10px; }
+#weatherline .hour .d { color: #1C2128; }
+.night #weatherline { color: rgba(236, 230, 220, 0.62); }
+.night #weatherline .now, .night #weatherline .hour .d { color: #ECE6DC; }
 .no-picks #clock { display: block; }
 .no-key #title, .no-key #tabs { visibility: hidden; }
 .night #clock { color: #ECE6DC; }
@@ -685,6 +695,7 @@ body.rtl { font-family: 'Geist', 'Inter', 'Noto Sans Arabic', 'SamsungOne', 'Seg
 .rtl .round.last .tip { left: -10px; right: auto; margin-left: 0; text-align: left; }
 .rtl .card .name, .rtl .card .meta { left: auto; right: 0; }
 .rtl #clock { left: auto; right: 96px; }
+.rtl #weatherline { left: auto; right: 96px; }
 
 .rtl .panel .head { left: auto; right: 34px; }
 .rtl .panel .side { right: auto; left: 34px; }

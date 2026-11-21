@@ -154,6 +154,46 @@ var CASES = {
       });
     }
   },
+  // Weather line cases: Denver fixture in Celsius, English. Expected text derived by hand from the fixture:
+  // now 41.2 -> "41°", code 3 -> "Cloudy"; hours +1, +2, +3 -> 38.4, 36.1, 35.0 -> "38°", "36°", "35°".
+  // Breaks if the line is missing, leaves out the current reading, or shows the hours out of order.
+  'weather-line': {
+    setup: function (fixture) { seed({temperature: 'C', language: 'en'}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var line = doc.getElementById('weatherline');
+      if (!line) return 'no #weatherline';
+      if (win.getComputedStyle(line).display === 'none') return '#weatherline is hidden';
+      var text = line.textContent, top = Math.floor(Date.now() / 3600000) * 3600000;
+      function label(k) { var h = new Date(top + k * 3600000).getHours(); return (h % 12 || 12) + ' ' + (h < 12 ? 'AM' : 'PM'); }
+      var want = ['41°', 'Cloudy', label(1), '38°', label(2), '36°', label(3), '35°'], at = 0;
+      for (var i = 0; i < want.length; i++) {
+        var found = text.indexOf(want[i], at);
+        if (found < 0) return 'missing "' + want[i] + '" (in order) in "' + text + '"';
+        at = found + want[i].length;
+      }
+      // Only three hours: the fourth (33.7 -> "34°") stays off the line.
+      return text.indexOf('34°') < 0 ? '' : 'shows a fourth hour: "' + text + '"';
+    }
+  },
+  // Breaks if the line shows (or the clock moves) when no weather was ever fetched.
+  'weather-none': {
+    setup: function () { seed({temperature: 'C', language: 'en'}, null); },
+    check: function (win, doc) {
+      var line = doc.getElementById('weatherline'), clock = doc.getElementById('clock').getBoundingClientRect();
+      if (!line) return 'no #weatherline';
+      if (win.getComputedStyle(line).display !== 'none') return '#weatherline shows without weather: "' + line.textContent + '"';
+      return Math.round(clock.left) === 96 && Math.round(clock.top) === 54 ? '' : 'clock moved to ' + Math.round(clock.left) + ',' + Math.round(clock.top);
+    }
+  },
+  // Breaks if the line ignores Home Settings' weather switch.
+  'weather-off': {
+    setup: function (fixture) { seed({temperature: 'C', language: 'en', weather: false}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var line = doc.getElementById('weatherline');
+      if (!line) return 'no #weatherline';
+      return win.getComputedStyle(line).display === 'none' ? '' : '#weatherline shows with weather off';
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

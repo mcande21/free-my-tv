@@ -52,7 +52,7 @@ needs Google Chrome and Python 3).
       remove the `#platter` glass gradient. Failing test first: case `safe-margin` asserts every box of `#clock`,
       `#weatherline`, `#buttons > *`, `#tiles > *` lies in x 96-1824, y 54-1026; run, expect FAIL (shelf starts at
       x 40) · change · gate, expect PASS · commit "feat(web): Horizon stage placement"
-- [ ] 3.2 weather line (spec: Clock and weather anchored top left): add `<div id="weatherline">` after `#clock` in
+- [x] 3.2 weather line (spec: Clock and weather anchored top left): add `<div id="weatherline">` after `#clock` in
       `web/index.html`; in `web/home.js` render it beside `renderPanels` from `weatherParts(Data.weather)` plus the
       next three `hourly` readings after now; hide it when `!Prefs.weather()` or no weather. Failing tests first:
       cases `weather-line` (fixture at 14:20: expects text containing `15:00`, `16:00`, `17:00` with their fixture
