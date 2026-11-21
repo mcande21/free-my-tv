@@ -112,6 +112,48 @@ var CASES = {
       });
     }
   },
+  // Breaks if any readable or focusable part of the no-picks home screen leaves the 5% safe area (Android TV guide:
+  // 48dp x 27dp at 960 x 540, so 96 x 54 px on the 1920 x 1080 stage), focused or not.
+  'safe-margin': {
+    still: true,
+    setup: function (fixture) { seed({}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      function shown(node) {
+        var cs = win.getComputedStyle(node);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0;
+      }
+      function outside(node, label) {
+        var r = node.getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) return '';
+        if (r.left < 96 || r.right > 1824 || r.top < 54 || r.bottom > 1026) {
+          return label + ' at ' + [r.left, r.top, r.right, r.bottom].map(Math.round).join(',');
+        }
+        return '';
+      }
+      var groups = [['#clock', 'clock'], ['#weatherline', 'weather line'], ['#buttons > *', 'top button'],
+        ['#tiles > *', 'shelf tile'], ['#platter > *', 'shelf arrow']];
+      function sweep() {
+        for (var g = 0; g < groups.length; g++) {
+          var nodes = doc.querySelectorAll(groups[g][0]);
+          for (var i = 0; i < nodes.length; i++) {
+            if (!shown(nodes[i])) continue;
+            var why = outside(nodes[i], groups[g][1] + ' ' + i);
+            if (why) return why;
+          }
+        }
+        return '';
+      }
+      var first = sweep();
+      if (first) return first;
+      press(win, doc, 38);   // up to the top buttons: their focused size counts too
+      return later(300).then(function () {
+        var why = sweep();
+        if (why) return 'with a top button focused: ' + why;
+        press(win, doc, 39); press(win, doc, 39);
+        return later(300).then(function () { var w = sweep(); return w ? 'with the last top button focused: ' + w : ''; });
+      });
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

@@ -124,6 +124,9 @@
   // Apps shown at once, as on Android: 8 (today's smallest tiles, 178 wide); the shelf scrolls for the rest. The
   // built-in list keeps 8 too.
   var SHELF_VISIBLE = 8, FEW_APPS = 8;
+  // The safe area (Android TV layout guide: a 5% margin, 48dp x 27dp at 960 x 540): 96 px at the sides, 54 px at the top
+  // and bottom of the 1920 x 1080 stage. SHELF_GROW: how far a focused tile grows past its box on each side.
+  var SAFE_X = 96, SAFE_Y = 54, SAFE_W = 1920 - 2 * SAFE_X, SHELF_GROW = 0.1;
 
   function shelfKey(app) {
     for (var i = 0; i < SHELF.length; i++) if (SHELF[i][1].test(app.id) || SHELF[i][2].test(app.title)) return SHELF[i];
@@ -497,7 +500,9 @@
     var defs = [[own ? 'tv' : 'live_tv', own ? boxLabel() : tr('light|Live TV')], ['hdmi', tr('HDMI Inputs')], ['settings', tr('light|Settings')]];
     for (var b = 0; b < 3; b++) {
       var r = el('button', 'round' + (b === 2 ? ' last' : ''), buttons);
-      startAt(r, 1596 + 88 * b);   // the buttons sit at the end edge of the screen: the right, or the left when mirrored
+      // The buttons sit at the end edge, inside the 96 px safe margin even at their focused size (scale 1.1): the right,
+      // or the left when mirrored.
+      startAt(r, 1576 + 88 * b);
       sym(defs[b][0], r);
       el('div', 'tip', r, defs[b][1]);
       hover(r, Z.TOP, 3 + b);
@@ -619,16 +624,18 @@
 
   function renderShelf() {
     var n = Math.min(shelf.length, SHELF_VISIBLE), gap = 48, pad = 40;
-    // 16:9 tiles, as on Android: never taller than 126, and the glass keeps its bottom edge.
-    var tw = Math.min(126 * 16 / 9, (1760 - Math.max(0, n - 1) * gap) / Math.max(1, n)), th = tw * 9 / 16;
-    var width = n * tw + Math.max(0, n - 1) * gap, left = (1920 - width) / 2;
-    var platter = $('platter');
+    // 16:9 tiles, as on Android: never taller than 126. Left-aligned in the safe area, with room for a focused tile to
+    // grow by SHELF_GROW on each side and for the platter's scroll arrows (pad).
+    var tw = Math.min(126 * 16 / 9, (SAFE_W - 2 * pad - Math.max(0, n - 1) * gap) / Math.max(1, n + 2 * SHELF_GROW));
+    var th = tw * 9 / 16, grow = tw * SHELF_GROW, growY = th * SHELF_GROW;
+    var width = n * tw + Math.max(0, n - 1) * gap, left = SAFE_X + pad + grow;
+    var platter = $('platter'), platterTop = 1080 - SAFE_Y - growY - th - 2 * pad;
     platter.style.display = n ? '' : 'none';
-    platter.style.left = (left - pad) + 'px';
-    platter.style.width = (width + 2 * pad) + 'px';
-    platter.style.top = (814 + 126 - th) + 'px';
+    startAt(platter, SAFE_X);   // the start edge: left, or right when mirrored
+    platter.style.width = (width + 2 * pad + 2 * grow) + 'px';
+    platter.style.top = platterTop + 'px';
     platter.style.height = (th + 2 * pad) + 'px';
-    endAt($('quotes'), 1920 - left - width);
+    endAt($('quotes'), SAFE_X);
     var tiles = $('tiles');
     tiles.innerHTML = '';
     tileStep = tw + gap;
@@ -636,7 +643,7 @@
     shelfFirst = Math.max(0, Math.min(shelfFirst, shelf.length - n));
     for (var i = 0; i < shelf.length; i++) {
       var t = el('div', 'tile', tiles);
-      t.style.top = (854 + 126 - th) + 'px';
+      t.style.top = (platterTop + pad) + 'px';
       t.style.width = tw + 'px';
       t.style.height = th + 'px';
       face(shelf[i], t, wordFit(shelf[i].title, tw, 30));
@@ -648,7 +655,7 @@
     for (var a = 0; a < 2; a++) {
       var arrow = sym('chevron_right', platter);
       arrow.className += (a === 1) === rtl ? ' more back' : ' more';   // the arrow at the start edge points out, toward it
-      startAt(arrow, (a ? width + 2 * pad - 14 : 14) - 8.5);
+      startAt(arrow, (a ? width + 2 * pad + 2 * grow - 14 : 14) - 8.5);
       arrow.style.top = (pad + th / 2 - 8.5) + 'px';
     }
     st.shelf = Math.min(st.shelf, Math.max(0, shelf.length - 1));

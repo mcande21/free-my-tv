@@ -47,7 +47,7 @@ needs Google Chrome and Python 3).
 
 ## 3. Horizon stage layout
 
-- [ ] 3.1 safe margin and placement (spec: Safe margin): move `#clock` to top-left at (96, 54), `#buttons` to
+- [x] 3.1 safe margin and placement (spec: Safe margin): move `#clock` to top-left at (96, 54), `#buttons` to
       top-right ending at x 1824, the shelf (`#platter`, `#tiles`) to left-aligned at x 96 with its bottom at y 1026;
       remove the `#platter` glass gradient. Failing test first: case `safe-margin` asserts every box of `#clock`,
       `#weatherline`, `#buttons > *`, `#tiles > *` lies in x 96-1824, y 54-1026; run, expect FAIL (shelf starts at
