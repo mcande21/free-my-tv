@@ -76,7 +76,7 @@ needs Google Chrome and Python 3).
       elements' computed `transition-property` lists only `transform` and/or `opacity`; run, expect FAIL · change · gate, expect PASS · commit
       "feat(web): entrance and sky motion"
 
-- [ ] 3.7 photo backdrop (spec: Horizon follows the sun; Photo cannot load): crop the four photos (design
+- [x] 3.7 photo backdrop (spec: Horizon follows the sun; Photo cannot load): crop the four photos (design
       Decision 3) to 1920 x 1080 JPEG q78 into `web/photos/{dawn,day,dusk,night}.jpg` with `web/photos/CREDITS.txt`
       (Decision 14); `tools/webapp.py` packs `web/photos/`; replace `<canvas id="horizon">` with `<img id="horizon"
       alt="">`; `updateHorizon` sets `src` to `photos/<phase>.jpg` and `data-phase`, and its `error` handler hides

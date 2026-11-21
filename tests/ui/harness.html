@@ -195,17 +195,33 @@ var CASES = {
       return win.getComputedStyle(line).display === 'none' ? '' : '#weatherline shows with weather off';
     }
   },
-  // Breaks if the no-picks screen has no horizon, if it names no phase, or if nothing is drawn where the ridges are.
-  'horizon-drawn': {
+  // Breaks if the backdrop is not the Front Range photo for the current sun phase, or if that photo did not load.
+  'backdrop-photo': {
     setup: function (fixture) { seed({temperature: 'C', language: 'en'}, denverWeather(fixture)); },
     check: function (win, doc) {
-      var c = doc.getElementById('horizon');
-      if (!c) return 'no #horizon canvas';
-      if (win.getComputedStyle(c).display === 'none' || parseFloat(win.getComputedStyle(c).opacity) === 0) return '#horizon is not shown';
-      var phase = c.getAttribute('data-phase');
+      var img = doc.getElementById('horizon');
+      if (!img || img.tagName !== 'IMG') return '#horizon is not an image';
+      var phase = img.getAttribute('data-phase');
       if (['night', 'dawn', 'day', 'dusk'].indexOf(phase) < 0) return 'data-phase is ' + phase;
-      var px = c.getContext('2d').getImageData(480, 500, 1, 1).data;   // low on the canvas: the near ridge
-      return px[3] === 255 ? '' : 'nothing drawn at (480, 500): alpha ' + px[3];
+      if (!/photos\/(night|dawn|day|dusk)\.jpg$/.test(img.src) || img.src.indexOf('photos/' + phase + '.jpg') < 0) return 'src ' + img.src + ' for phase ' + phase;
+      if (win.getComputedStyle(img).display === 'none') return 'the photo is hidden';
+      return img.complete && img.naturalWidth === 1920 ? '' : 'photo not loaded (naturalWidth ' + img.naturalWidth + ')';
+    }
+  },
+  // Breaks if a photo that fails to load leaves a broken image instead of the plain sky.
+  'backdrop-fallback': {
+    check: function (win, doc) {
+      var img = doc.getElementById('horizon');
+      if (!img || img.tagName !== 'IMG') return '#horizon is not an image';
+      // First a working photo, so a page that never set one up cannot pass by looking hidden.
+      if (!img.getAttribute('data-phase') || win.getComputedStyle(img).display === 'none') return 'no photo showed before the failure';
+      img.src = 'photos/missing-' + Date.now() + '.jpg';
+      return later(800).then(function () {
+        if (win.getComputedStyle(img).display !== 'none') return 'a failed photo still shows';
+        var grads = doc.querySelectorAll('#sky .grad'), shown = 0;
+        for (var i = 0; i < grads.length; i++) if (parseFloat(win.getComputedStyle(grads[i]).opacity) > 0) shown++;
+        return shown ? '' : 'no sky gradient shows behind the failed photo';
+      });
     }
   },
   // Breaks if the focused app shows no name, if an unfocused one does, or if focusing moves its neighbours.

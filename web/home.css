@@ -80,11 +80,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #weatherline { -webkit-animation-delay: 0.08s; animation-delay: 0.08s; }
 #tiles { -webkit-animation-delay: 0.16s; animation-delay: 0.16s; }
 #sky canvas.on { opacity: 1; }
-/* The horizon (home.js drawHorizon): over the veil, full bleed, in the no-picks state only. */
+/* The horizon photograph (home.js showHorizon): over the veil, full bleed, in the no-picks state only. */
 /* State transition: a new phase fades the old sky out and the new one in (home.js updateHorizon), 1 s each way. */
-#sky #horizon { display: none; left: 0; top: 0; width: 100%; height: 100%; opacity: 1; -webkit-transition: opacity 1s; transition: opacity 1s; }
+#sky #horizon { display: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; -webkit-transition: opacity 1s; transition: opacity 1s; }
 #sky #horizon.fading { opacity: 0; }
 .no-picks #sky #horizon { display: block; }
+.no-picks #sky #horizon.nophoto { display: none; }
 #sky .veil { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(236, 230, 220, 0.74); -webkit-transition: background-color 2s; transition: background-color 2s; }
 #sky .lift { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #FFF; opacity: 0; -webkit-transition: opacity 0.45s, background-color 2s; transition: opacity 0.45s, background-color 2s; }
 .night #sky .day { opacity: 0; }

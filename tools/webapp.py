@@ -121,6 +121,13 @@ def files(config, made_by):
             if name.endswith('.png') or name.startswith('LICENSE'):
                 with open(os.path.join(symbols, name), 'rb') as f:
                     out['symbols/' + name] = f.read()
+    # The home screen's Front Range photographs, one per sun phase, and their credits.
+    photos = os.path.join(web, 'photos')
+    if os.path.isdir(photos):
+        for name in sorted(os.listdir(photos)):
+            if name.endswith('.jpg') or name == 'CREDITS.txt':
+                with open(os.path.join(photos, name), 'rb') as f:
+                    out['photos/' + name] = f.read()
     for name in ('InterVariable.ttf', 'OFL.txt'):
         with open(os.path.join(ROOT, 'app', 'assets', 'fonts', name), 'rb') as f:
             out['fonts/' + name] = f.read()

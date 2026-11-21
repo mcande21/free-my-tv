@@ -616,62 +616,32 @@
   // MARK: - Horizon
 
   /*
-   * Three ridges of the Front Range under a sky that follows the sun (web/sun.js), drawn on one 960 x 540 canvas that
-   * the stage scales up. Drawn again only when the phase changes: the minute tick and new weather ask, never a frame.
+   * A photograph of the Front Range for the sun's phase (web/sun.js), from web/photos (credits in CREDITS.txt). The
+   * first is shown at once; a new phase fades the old one out (1 s, home.css), swaps it, and fades in. A photo that
+   * fails to load is hidden, and the sky's own day or night colours show.
    */
-  var HORIZON = {
-    night: {sky: ['#0F141B', '#1E2631'], ridges: ['#2A3442', '#1C232D', '#10141A']},
-    dawn: {sky: ['#2A3442', '#C98B6B'], ridges: ['#4A5566', '#323B48', '#1A2029']},
-    day: {sky: ['#E9E4DC', '#D9D2C6'], ridges: ['#C9C2B6', '#B3AC9F', '#9C958A']},
-    dusk: {sky: ['#1E2631', '#E3A15E'], ridges: ['#5A4E5C', '#3A3542', '#1A1D24']}
-  };
-  // Ridge lines as fixed sums of sines (the same skyline every time): base height, then [amplitude, wavelength, shift].
-  var RIDGES = [
-    [318, [[34, 410, 0.3], [18, 170, 1.9], [7, 61, 4.2]]],
-    [372, [[28, 520, 2.4], [14, 140, 0.7], [6, 47, 3.1]]],
-    [430, [[22, 640, 5.1], [11, 120, 2.2], [5, 39, 0.9]]]
-  ];
   var horizonPhase = '', horizonFading = false;
 
-  /** The first sky is drawn at once; a later phase fades the old one out (1 s, home.css), is drawn, and fades in. */
+  function showHorizon(phase) {
+    var img = $('horizon');
+    img.onerror = function () { img.className = 'nophoto'; };
+    img.onload = function () { img.className = ''; };
+    img.setAttribute('data-phase', phase);
+    img.src = 'photos/' + phase + '.jpg';
+    horizonPhase = phase;
+  }
+
   function updateHorizon() {
     var w = Data.weather, phase = Sun.phase(Date.now(), w ? w.sunrise : 0, w ? w.sunset : 0);
     if (phase === horizonPhase || horizonFading) return;
-    if (!horizonPhase) { drawHorizon(phase); return; }
-    var canvas = $('horizon');
+    if (!horizonPhase) { showHorizon(phase); return; }
+    var img = $('horizon');
     horizonFading = true;
-    canvas.className = 'fading';
+    img.className = 'fading';
     setTimeout(function () {
-      drawHorizon(phase);
-      canvas.className = '';
+      showHorizon(phase);
       horizonFading = false;
     }, 1000);
-  }
-
-  function drawHorizon(phase) {
-    var canvas = $('horizon'), ctx = canvas.getContext ? canvas.getContext('2d') : null;
-    if (!ctx) return;   // no 2D canvas: the sky's own gradients show, as before
-    var look = HORIZON[phase], W = canvas.width, H = canvas.height;
-    var sky = ctx.createLinearGradient(0, 0, 0, RIDGES[0][0]);
-    sky.addColorStop(0, look.sky[0]);
-    sky.addColorStop(1, look.sky[1]);
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, H);
-    for (var r = 0; r < RIDGES.length; r++) {
-      ctx.beginPath();
-      ctx.moveTo(0, H);
-      for (var x = 0; x <= W; x += 4) {
-        var y = RIDGES[r][0], waves = RIDGES[r][1];
-        for (var k = 0; k < waves.length; k++) y -= waves[k][0] * Math.sin(x / waves[k][1] * 2 * Math.PI + waves[k][2]);
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(W, H);
-      ctx.closePath();
-      ctx.fillStyle = look.ridges[r];
-      ctx.fill();
-    }
-    canvas.setAttribute('data-phase', phase);
-    horizonPhase = phase;
   }
 
   /** On the minute, so the clock never runs late (the 30-second refresh could, by up to 30 s). */
