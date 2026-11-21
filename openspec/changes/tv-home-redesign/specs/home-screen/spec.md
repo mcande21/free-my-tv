@@ -30,16 +30,29 @@ condition, then the next three hours' temperatures.
 - **THEN** the weather line is hidden
 
 ### Requirement: Horizon follows the sun
-The background SHALL draw a layered horizon whose sky colour comes from the sun's phase today: night, dawn, day or
-dusk, worked out from the cached sunrise and sunset.
+The background SHALL show a photograph of the Colorado Front Range chosen by the sun's phase today: night, dawn, day
+or dusk, worked out from the cached sunrise and sunset. If the photograph cannot be shown, the plain sky colours of
+the day or night mode SHALL show instead.
 
 #### Scenario: Dusk colours after sunset
 - **WHEN** the time is within 45 minutes after today's sunset
 - **THEN** the sky shows the dusk palette
 
+#### Scenario: Photo cannot load
+- **WHEN** the phase's photograph fails to load
+- **THEN** no broken image shows and the plain sky colours show behind the home screen
+
 #### Scenario: No sunrise or sunset known
 - **WHEN** no cached weather gives sunrise and sunset
 - **THEN** the sky uses the night palette between 19:00 and 07:00 and the day palette otherwise
+
+### Requirement: Text stays readable over the photo
+The clock, the date, the weather line and the focused app's name SHALL keep a contrast ratio of at least 3:1 (WCAG
+large text) against the photograph behind them, in every phase.
+
+#### Scenario: Night photo behind the clock
+- **WHEN** the night photograph is behind the home screen
+- **THEN** the clock's contrast against the pixels behind it is at least 3:1
 
 ### Requirement: Shelf focus
 The focused shelf tile SHALL be wider than the others, show its app name, and carry the amber accent; other tiles show

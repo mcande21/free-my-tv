@@ -66,12 +66,7 @@ needs Google Chrome and Python 3).
       sunset 16:40: 17:00 -> `dusk`; 17:30 -> `night`; 06:30 -> `dawn`; 12:00 -> `day`; no times at 20:00 ->
       `night`, at 12:00 -> `day`; times 0, NaN or undefined at 12:00 -> `day`. Run, expect FAIL (no web/sun.js) · implement ·
       gate, expect PASS · commit "feat(web): sun phase"
-- [x] 3.6 horizon canvas (spec: Horizon follows the sun): add `<canvas id="horizon" width="960" height="540">` in
-      `#sky` and `<script src="sun.js">` before `home.js` in `web/index.html`; in `home.js` `drawHorizon(phase)` draws
-      three ridges from a fixed seed and the phase sky, sets `data-phase` on the canvas, redraws only when
-      `Sun.phase` changes in the minute tick, and skips drawing when `getContext('2d')` is null. Failing test first:
-      UI case `horizon-drawn` asserts `#horizon` has a `data-phase` in {night, dawn, day, dusk} and a non-blank
-      pixel at (480, 500); run, expect FAIL · change · gate, expect PASS · commit "feat(web): horizon canvas"
+- [x] ~~3.6 horizon canvas: three drawn ridges on a canvas~~ superseded by 3.7: ruling 2026-11-21 (photographs)
 - [x] 3.4 shelf focus (spec: Shelf focus): tiles icon-only; the focused tile scales its icon to 1.15 and fades in
       its name; one tile width, no reflow. Failing test first: case `shelf-focus` moves focus 0 to 1 and asserts
       tile 1 has a visible name (opacity 1), tile 0's name opacity 0, and tile 2's left edge did not move; run,
@@ -80,6 +75,22 @@ needs Google Chrome and Python 3).
       opacity, 420 ms, 80 ms apart), sky 2 s crossfade. Failing test first: case `motion-props` asserts the three
       elements' computed `transition-property` lists only `transform` and/or `opacity`; run, expect FAIL · change · gate, expect PASS · commit
       "feat(web): entrance and sky motion"
+
+- [ ] 3.7 photo backdrop (spec: Horizon follows the sun; Photo cannot load): crop the four photos (design
+      Decision 3) to 1920 x 1080 JPEG q78 into `web/photos/{dawn,day,dusk,night}.jpg` with `web/photos/CREDITS.txt`
+      (Decision 14); `tools/webapp.py` packs `web/photos/`; replace `<canvas id="horizon">` with `<img id="horizon"
+      alt="">`; `updateHorizon` sets `src` to `photos/<phase>.jpg` and `data-phase`, and its `error` handler hides
+      it; remove the canvas drawing code (HORIZON, RIDGES, drawHorizon). Failing tests first: UI case
+      `backdrop-photo` (Denver fixture: `#horizon` is an image whose `src` ends in `photos/<data-phase>.jpg`, loaded,
+      `naturalWidth` 1920) and `backdrop-fallback` (set `#horizon` `src` to a missing file: after the error it is not
+      displayed and `#sky .grad` shows); `horizon-drawn` retires with the canvas. Run, expect FAIL · change · gate,
+      expect PASS · commit "feat(web): Front Range photo backdrop"
+- [ ] 3.8 readable over the photo (spec: Text stays readable over the photo): add `<div id="scrim">` over the photo
+      (top-left and bottom dark gradient, no-picks only) and, with a photo shown, the night ink for `#clock`,
+      `#weatherline` and `.tile .label`. Failing check first: the measurement (design Decision 15) run from the
+      mission's scratch on screenshots of all four phases, expect some text box under 3:1 before the scrim ·
+      change · rerun, expect every box at or over 3:1 · gate, expect PASS · commit "feat(web): text stays readable
+      over the photos"
 
 ## 4. Must not change
 

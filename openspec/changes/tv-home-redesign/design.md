@@ -24,11 +24,15 @@ the other surfaces; a UI test that drives the real page.
    and 600 for interface text; `font-variant-numeric: tabular-nums` on the time and temperatures. Files from
    `@fontsource/outfit` 5.3.0 and `@fontsource/geist-sans` 5.3.0 (OFL-1.1), latin subset, with `OFL.txt` beside them.
    Inter stays in the stack after Geist (home.css:29 and :671) and its files stay, for Cyrillic, Greek and Vietnamese glyphs the latin subsets lack. Rejected: Inter as the face (the audit's first finding); deleting Inter (other languages would fall to system fonts); a CDN (the app runs offline and from file://).
-3. **Horizon on one canvas, redrawn only on phase change.** A new `<canvas id="horizon">` in `#sky`, 960 x 540 scaled
-   to the stage, draws three ridge silhouettes from a fixed seeded profile and a vertical sky gradient for the phase.
-   It redraws when the phase changes (checked each minute with the clock tick), never per frame. Rejected: CSS
-   gradients plus SVG (no filter control on older TVs, larger markup); an image (a fixed look that cannot follow
-   the sun).
+3. **Front Range photographs, one per phase** (superseded the canvas ridges; ruling 2026-11-21). An `<img id="horizon">`
+   in `#sky`, full bleed with `object-fit: cover`, shows `photos/<phase>.jpg` (1920 x 1080 JPEG, quality 78, cropped to
+   the peaks). Its `error` handler hides it, so the `#sky .day`/`.night` gradients show. A dark gradient scrim
+   (`#scrim`) sits over the photo behind the clock and the shelf, and with a photo shown the home text uses the night
+   ink. Photos (Wikimedia Commons): dawn "Mt. Evans Sunset (5862299184).jpg", Zach Dischner, CC BY 2.0; day "Mount
+   Meeker and Longs Peak.jpg", KamenG, CC BY-SA 4.0; dusk "Long's Peak Sunset.jpg", Peter Romero, CC BY-SA 4.0; night
+   "Rocky Mountain National Park, United States (Unsplash pq2DJBntZW0).jpg", Jeremy Thomas, CC0. Rejected: the
+   generated ridges (Morpheus wanted real photographs); city skylines (Morpheus: "focus on mountains not city").
+
 4. **Sun phase** from `Data.weather.sunrise` and `.sunset` (epoch ms, which `parseWeather` makes from the cached `daily.sunrise[0]` and `daily.sunset[0]`): dawn = sunrise - 45 min to sunrise + 30 min;
    dusk = sunset - 30 min to sunset + 45 min; day between; night otherwise. No weather: night 19:00-07:00, else day.
 5. **Weather line** reuses `weatherParts()` for the current reading and adds three hourly labels from
@@ -56,6 +60,12 @@ the other surfaces; a UI test that drives the real page.
     `FreeMyTV-tizen.wgt` (unsigned); TizenBrew Installer installs it from the fork and re-signs it on Tizen 7+ with
     the owner's saved certificate, the same one as the current install, so it installs as an update.
 
+14. **Photo credits:** `web/photos/CREDITS.txt` names each photo's author, source page, licence and the change made
+    (cropped, resized). `tools/webapp.py` packs `web/photos/` (`.jpg` and `CREDITS.txt`). The two CC BY-SA crops are
+    shared under CC BY-SA 4.0, which the credits file states.
+15. **Readability measurement:** rendered 1920 x 1080 screenshots per phase; for each text box, the text colour against
+    the median luminance of the pixels in the box's padding ring; WCAG contrast ratio. Excludes the TV's own picture
+    processing.
 13. **Version 1.5.1 in the fork:** `tizen/config.xml` `version="1.5.1"`, so the TV sees a newer package than the
     installed 1.5.0 and no same-version reinstall question arises. Rejected: shipping 1.5.0 again (untested path).
 
@@ -104,6 +114,8 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 | Symbols are shared with Android | `sed -n 97,130p tools/webapp.py` | `symbols = os.path.join(ROOT, 'app', 'assets', 'symbols')`: web packs the Android folder |
 | New web/*.js files are packed | same read | `for name in sorted(os.listdir(web))`, files only: yes |
 | web/fonts licence files are packed | same read | only `.woff2`: no; Decision 12 adds it |
+| Photo licences and authors | Commons API extmetadata LicenseShortName, Artist | dawn CC BY 2.0 Zach Dischner; day CC BY-SA 4.0 KamenG; dusk CC BY-SA 4.0 Peter Romero; night CC0 Jeremy Thomas |
+| Photo sizes allow a 1920 x 1080 crop | Commons API imageinfo size | dawn 2048x988 (upscale 9%), day 2500x997 (upscale 8%), dusk 2048x1365, night 5285x3513 |
 | Installed version on the TV | `curl http://192.168.0.21:8001/api/v2/applications/FreeMyTVio.FreeMyTV` | `"version":"1.5.0"`; Decision 13 ships 1.5.1 |
 | GitHub account for the fork | `gh api user -q .login` | mcande21 |
 | Every place the font rule lives | `grep -rln Inter web docs` then `grep -rn "'Inter'" web` | web/home.css:12-17 (@font-face), :29 (body), :671 (body.rtl); home.js/tv.js hits are `setInterval`; docs/ out of scope, keeps its own |
@@ -111,5 +123,6 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 ## Rulings
 
 - 2026-11-20: direction Front Range dusk; layout Horizon stage; delivery through the owner's fork. (Morpheus)
+- 2026-11-21: T2 amendment: Front Range photographs replace the canvas ridges (Decision 3, new 14-15; spec Horizon follows the sun reworded, Photo cannot load and Text stays readable added; task 3.6 superseded, 3.7-3.8 added). (Morpheus: photos, mountains not city, these four picks)
 - 2026-11-21: T2 amendment: Sun.phase takes epoch ms, not ISO strings (Decisions 4 and 11, task 3.3); Data.weather already holds ms and data.js owns parsing. (Morpheus)
 - 2026-11-21: plan approved with both simplify findings adopted: 2.1 tests that the old greys and black shadows are gone instead of one exact background; 3.5 tests transform/opacity only, no exact delays. (Morpheus)
