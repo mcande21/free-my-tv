@@ -85,7 +85,7 @@ needs Google Chrome and Python 3).
       `naturalWidth` 1920) and `backdrop-fallback` (set `#horizon` `src` to a missing file: after the error it is not
       displayed and `#sky .grad` shows); `horizon-drawn` retires with the canvas. Run, expect FAIL · change · gate,
       expect PASS · commit "feat(web): Front Range photo backdrop"
-- [ ] 3.8 readable over the photo (spec: Text stays readable over the photo): add `<div id="scrim">` over the photo
+- [x] 3.8 readable over the photo (spec: Text stays readable over the photo): add `<div id="scrim">` over the photo
       (top-left and bottom dark gradient, no-picks only) and, with a photo shown, the night ink for `#clock`,
       `#weatherline` and `.tile .label`. Failing check first: the measurement (design Decision 15) run from the
       mission's scratch on screenshots of all four phases, expect some text box under 3:1 before the scrim ·

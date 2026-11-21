@@ -624,8 +624,9 @@
 
   function showHorizon(phase) {
     var img = $('horizon');
-    img.onerror = function () { img.className = 'nophoto'; };
-    img.onload = function () { img.className = ''; };
+    // With a photo behind it the home screen's text takes the light ink (home.css .photo); without one, the mode's own.
+    img.onerror = function () { img.className = 'nophoto'; setClass(document.body, 'photo', false); };
+    img.onload = function () { img.className = ''; setClass(document.body, 'photo', true); };
     img.setAttribute('data-phase', phase);
     img.src = 'photos/' + phase + '.jpg';
     horizonPhase = phase;
