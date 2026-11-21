@@ -91,12 +91,43 @@ var CASES = {
       return '';
     }
   },
+  // Breaks if focus is still marked with a white fill instead of the amber accent, on the shelf or the top buttons.
+  'focus-accent': {
+    still: true,
+    check: function (win, doc) {
+      var AMBER = 'rgb(227, 161, 94)';
+      press(win, doc, 39);
+      return later(400).then(function () {
+        var tile = doc.querySelector('#tiles .tile.focus');
+        if (!tile) return 'no focused shelf tile after Right';
+        if (tile !== doc.querySelectorAll('#tiles .tile')[1]) return 'Right did not focus the second tile';
+        if (win.getComputedStyle(tile).boxShadow.indexOf(AMBER) < 0) return 'focused tile has no amber underline: ' + win.getComputedStyle(tile).boxShadow;
+        press(win, doc, 38);
+        return later(400).then(function () {
+          var round = doc.querySelector('.round.focus');
+          if (!round) return 'no focused top button after Up';
+          var bg = win.getComputedStyle(round).backgroundColor;
+          return bg === AMBER ? '' : 'focused top button background is ' + bg;
+        });
+      });
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;
     }
   }
 };
+
+/** A remote key press as the page reads it (keydown with keyCode): 37 left, 38 up, 39 right, 40 down. */
+function press(win, doc, keyCode) {
+  var e = doc.createEvent('Event');
+  e.initEvent('keydown', true, true);
+  Object.defineProperty(e, 'keyCode', {get: function () { return keyCode; }});
+  Object.defineProperty(e, 'which', {get: function () { return keyCode; }});
+  doc.dispatchEvent(e);
+}
+function later(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
 function finish(text) { document.getElementById('result').textContent = text; }
 
@@ -109,6 +140,11 @@ function finish(text) { document.getElementById('result').textContent = text; }
     frame.src = '/out/tizen/index.html';
     frame.onload = function () {
       setTimeout(function () {
+        if (c.still) {   // end states only: headless virtual time does not advance CSS transitions
+          var st = frame.contentDocument.createElement('style');
+          st.textContent = '*, *::before, *::after { -webkit-transition: none !important; transition: none !important; }';
+          frame.contentDocument.head.appendChild(st);
+        }
         var report = function (why) { finish(why ? 'FAIL ' + CASE + ': ' + why : 'PASS ' + CASE); };
         var why;
         try { why = c.check(frame.contentWindow, frame.contentDocument); } catch (e) { report('check threw ' + e); return; }

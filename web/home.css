@@ -138,15 +138,15 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .tab.on { font-weight: 600; color: #1C2128; }
 .tab.focus {
-  background: #FFF;
+  background: #E3A15E;
   color: #1C2128;
   -webkit-transform: scale(1.05);
   transform: scale(1.05);
-  box-shadow: 0 8px 26px rgba(6, 10, 16, 0.22);
+  box-shadow: 0 8px 26px rgba(227, 161, 94, 0.35);
 }
 .night #title, .night .tab.on { color: #ECE6DC; }
 .night .tab { color: rgba(236, 230, 220, 0.62); }
-.night .tab.focus { color: #1C2128; box-shadow: 0 8px 26px rgba(6, 10, 16, 0.4); }
+.night .tab.focus { color: #1C2128; box-shadow: 0 8px 26px rgba(227, 161, 94, 0.35); }
 
 /* Crypto quotes at the right end of the tab row: a quiet detail. */
 #quotes {
@@ -184,7 +184,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.2s, background-color 0.17s;
 }
 .round .sym { position: absolute; left: 20px; top: 20px; width: 28px; height: 28px; }
-.round.focus { background: #FFF; -webkit-transform: scale(1.1); transform: scale(1.1); box-shadow: 0 14px 30px rgba(6, 10, 16, 0.24); }
+/* Focus is the one amber accent: a fill on buttons and tabs, an underline on the shelf. */
+.round.focus { background: #E3A15E; color: #1C2128; -webkit-transform: scale(1.1); transform: scale(1.1); box-shadow: 0 14px 30px rgba(227, 161, 94, 0.35); }
 .round .tip {
   position: absolute;
   top: 88px;
@@ -207,7 +208,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   box-shadow: 0 6px 26px rgba(6, 10, 16, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.92);
 }
-.night .round.focus { background: #FFF; color: #1C2128; }
+.night .round.focus { background: #E3A15E; color: #1C2128; }
 .night .round.focus .tip { color: #ECE6DC; }
 
 /* MARK: - Picks: the card with focus is wide, the others narrow (posters); it grows 5%, rises and its edge lights up. */
@@ -401,10 +402,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   -webkit-transition: opacity 0.17s;
   transition: opacity 0.17s;
 }
-.tile.focus { -webkit-transform: scale(1.2); transform: scale(1.2); box-shadow: 0 18px 40px rgba(6, 10, 16, 0.34); z-index: 2; }
+.tile.focus { -webkit-transform: scale(1.2); transform: scale(1.2); box-shadow: 0 7px 0 -2px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.35); z-index: 2; }
 .tile.focus::after { opacity: 1; }
 .night .tile { box-shadow: 0 4px 22px rgba(6, 10, 16, 0.3); }
-.night .tile.focus { box-shadow: 0 18px 40px rgba(6, 10, 16, 0.6); }
+.night .tile.focus { box-shadow: 0 7px 0 -2px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.3); }
 .more { position: absolute; width: 17px; height: 17px; color: rgba(6, 10, 16, 0.6); }
 .more.back { -webkit-transform: scaleX(-1); transform: scaleX(-1); }
 .night .more { color: rgba(255, 255, 255, 0.8); }
@@ -663,8 +664,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .layered .card .back { -webkit-transition: opacity 0.45s !important; transition: opacity 0.45s !important; }
 .layered #sky canvas { -webkit-transition: opacity 0.8s !important; transition: opacity 0.8s !important; }
-.layered .tile.focus { box-shadow: 0 18px 40px rgba(6, 10, 16, 0.34) !important; }
-.layered .night .tile.focus { box-shadow: 0 18px 40px rgba(6, 10, 16, 0.6) !important; }
+.layered .tile.focus { box-shadow: 0 7px 0 -2px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.35) !important; }
+.layered .night .tile.focus { box-shadow: 0 7px 0 -2px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.3) !important; }
 
 /* Samsungs up to 2 GB (see tv.js): the parts that move lose their soft shadows, which the TV repainted on every frame of
    a move, and what slides is a layer from the start, so a move starts at once. */

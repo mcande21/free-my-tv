@@ -39,7 +39,7 @@ needs Google Chrome and Python 3).
       color or background-color of the old Apple greys `rgb(29, 29, 31)`, `rgb(245, 245, 247)`, `rgb(110, 110, 115)`,
       and no element under `#home` has a box-shadow containing `rgba(0, 0, 0`; run, expect FAIL · change · gate,
       expect PASS · commit "feat(web): Front Range palette and type"
-- [ ] 2.2 accent focus: `.round.focus`, `.tab.focus` and the shelf's focused tile use the amber accent `#E3A15E`
+- [x] 2.2 accent focus: `.round.focus`, `.tab.focus` and the shelf's focused tile use the amber accent `#E3A15E`
       (3 px underline and `rgba(227, 161, 94, 0.35)` shadow) instead of a white fill. Failing test first: case
       `focus-accent` sends the shelf focus to tile 1 (dispatch `keydown` Right) and asserts the focused tile's
       underline colour is `rgb(227, 161, 94)`; run, expect FAIL · change · gate, expect PASS · commit
