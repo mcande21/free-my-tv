@@ -1732,7 +1732,7 @@
     setClass(body, 'night', night);
     if (night === lastNight) return;
     lastNight = night;
-    document.documentElement.style.background = night ? '#0B0B0D' : '';
+    document.documentElement.style.background = night ? '#151A21' : '';
     try { localStorage.setItem('fmtv.night', night ? 'true' : 'false'); } catch (e) {}   // for index.html, next start
   }
 

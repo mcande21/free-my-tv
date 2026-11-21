@@ -67,6 +67,30 @@ var CASES = {
       });
     }
   },
+  // Breaks if the interface face is not Geist, if any of Apple's system greys survive in day or night mode, or if a
+  // home screen shadow is plain black instead of the tinted slate.
+  'palette': {
+    check: function (win, doc) {
+      var OLD = ['rgb(29, 29, 31)', 'rgb(245, 245, 247)', 'rgb(110, 110, 115)'];
+      var family = win.getComputedStyle(doc.body).fontFamily.replace(/["']/g, '');
+      if (family.indexOf('Geist') !== 0) return 'body font-family is ' + family;
+      var modes = [true, false];
+      for (var m = 0; m < modes.length; m++) {
+        doc.body.classList.toggle('night', modes[m]);
+        var all = doc.querySelectorAll('#stage, #stage *');
+        for (var i = 0; i < all.length; i++) {
+          var cs = win.getComputedStyle(all[i]);
+          if (OLD.indexOf(cs.color) >= 0 || OLD.indexOf(cs.backgroundColor) >= 0) {
+            return (modes[m] ? 'night' : 'day') + ': ' + (all[i].id || all[i].className || all[i].tagName) + ' uses ' + (OLD.indexOf(cs.color) >= 0 ? cs.color : cs.backgroundColor);
+          }
+          if (all[i].closest('#home') && cs.boxShadow.indexOf('rgba(0, 0, 0') >= 0) {
+            return (modes[m] ? 'night' : 'day') + ': ' + (all[i].id || all[i].className) + ' has a black shadow';
+          }
+        }
+      }
+      return '';
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

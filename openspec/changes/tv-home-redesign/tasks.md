@@ -31,7 +31,7 @@ needs Google Chrome and Python 3).
 
 ## 2. Look
 
-- [ ] 2.1 palette and type: in `web/home.css` add the token key comment (design Decision 1), set `body` to
+- [x] 2.1 palette and type: in `web/home.css` add the token key comment (design Decision 1), set `body` to
       `'Geist', 'Inter', 'LG Smart UI', 'Helvetica Neue', Arial, sans-serif` (line 29) and the same lead in
       `body.rtl` (line 671), night ground `#151A21`, ink `#ECE6DC`, muted `#97A0AC`, day ground `#E9E4DC`, day ink
       `#1C2128`; replace every `rgba(0, 0, 0,` shadow with `rgba(6, 10, 16,`; radii to 8/16/28. Failing test first:
