@@ -72,7 +72,7 @@ needs Google Chrome and Python 3).
       `Sun.phase` changes in the minute tick, and skips drawing when `getContext('2d')` is null. Failing test first:
       UI case `horizon-drawn` asserts `#horizon` has a `data-phase` in {night, dawn, day, dusk} and a non-blank
       pixel at (480, 500); run, expect FAIL · change · gate, expect PASS · commit "feat(web): horizon canvas"
-- [ ] 3.4 shelf focus (spec: Shelf focus): tiles icon-only; the focused tile scales its icon to 1.15 and fades in
+- [x] 3.4 shelf focus (spec: Shelf focus): tiles icon-only; the focused tile scales its icon to 1.15 and fades in
       its name; one tile width, no reflow. Failing test first: case `shelf-focus` moves focus 0 to 1 and asserts
       tile 1 has a visible name (opacity 1), tile 0's name opacity 0, and tile 2's left edge did not move; run,
       expect FAIL · change · gate, expect PASS · commit "feat(web): shelf focus grows the app"

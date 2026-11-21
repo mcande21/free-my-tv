@@ -131,7 +131,7 @@ var CASES = {
         return '';
       }
       var groups = [['#clock', 'clock'], ['#weatherline', 'weather line'], ['#buttons > *', 'top button'],
-        ['#tiles > *', 'shelf tile'], ['#platter > *', 'shelf arrow']];
+        ['#tiles > *', 'shelf tile'], ['#tiles .label', 'shelf name'], ['#platter > *', 'shelf arrow']];
       function sweep() {
         for (var g = 0; g < groups.length; g++) {
           var nodes = doc.querySelectorAll(groups[g][0]);
@@ -205,6 +205,26 @@ var CASES = {
       if (['night', 'dawn', 'day', 'dusk'].indexOf(phase) < 0) return 'data-phase is ' + phase;
       var px = c.getContext('2d').getImageData(480, 500, 1, 1).data;   // low on the canvas: the near ridge
       return px[3] === 255 ? '' : 'nothing drawn at (480, 500): alpha ' + px[3];
+    }
+  },
+  // Breaks if the focused app shows no name, if an unfocused one does, or if focusing moves its neighbours.
+  'shelf-focus': {
+    still: true,
+    check: function (win, doc) {
+      var tiles = doc.querySelectorAll('#tiles .tile');
+      if (tiles.length < 3) return 'fewer than 3 shelf tiles';
+      function label(t) { return t.querySelector('.label'); }
+      function seen(t) { var l = label(t); return l ? parseFloat(win.getComputedStyle(l).opacity) : -1; }
+      var thirdLeft = tiles[2].getBoundingClientRect().left;
+      press(win, doc, 39);
+      return later(300).then(function () {
+        if (!label(tiles[1])) return 'tile 1 has no name label';
+        if (label(tiles[1]).textContent.trim() === '') return 'tile 1 label is empty';
+        if (seen(tiles[1]) !== 1) return 'focused tile 1 name opacity ' + seen(tiles[1]);
+        if (seen(tiles[0]) !== 0) return 'unfocused tile 0 name opacity ' + seen(tiles[0]);
+        var moved = tiles[2].getBoundingClientRect().left - thirdLeft;
+        return Math.abs(moved) < 0.5 ? '' : 'tile 2 moved ' + moved + ' px';
+      });
     }
   },
   'harness-loads': {
