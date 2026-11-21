@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Free My TV UI harness</title>
+<style>html, body { margin: 0; } iframe { border: 0; width: 1920px; height: 1080px; display: block; }</style>
+<pre id="result"></pre>
+<script>
+// One case per run (run.sh passes ?case=). Each case may seed localStorage (setup) before the real page loads in a
+// same-origin iframe, then checks the page (check) and returns '' for a pass or the reason it failed.
+var CASE = (location.search.match(/case=([a-z0-9-]+)/) || [])[1];
+var DENVER = {latitude: 39.73915, longitude: -104.9847};
+
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+/** Open-Meteo local time string for epoch ms at a fixed UTC offset (seconds). */
+function meteoTime(ms, off) {
+  var d = new Date(ms + off * 1000);
+  return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+}
+/** The Denver fixture with hourly times at now + 1h, + 2h, ... and today's sunrise and sunset at the given local times. */
+function denverWeather(fixture, sunriseHM, sunsetHM) {
+  var body = JSON.parse(JSON.stringify(fixture)), off = body.utc_offset_seconds;
+  var hourMs = 3600000, now = Date.now(), top = Math.floor(now / hourMs) * hourMs;
+  body.hourly.time = body.hourly.temperature_2m.map(function (_, k) { return meteoTime(top + (k + 1) * hourMs, off); });
+  var today = meteoTime(now, off).slice(0, 10);
+  body.daily.time = [today];
+  body.daily.sunrise = [today + 'T' + (sunriseHM || '06:58')];
+  body.daily.sunset = [today + 'T' + (sunsetHM || '16:40')];
+  return body;
+}
+function seed(prefs, weatherBody) {
+  localStorage.clear();
+  var p = {latitude: DENVER.latitude, longitude: DENVER.longitude};
+  for (var k in prefs) p[k] = prefs[k];
+  localStorage.setItem('fmtv.prefs', JSON.stringify(p));
+  if (weatherBody) {
+    localStorage.setItem('fmtv.weather', JSON.stringify({place: DENVER.latitude + ',' + DENVER.longitude,
+      body: weatherBody, at: Date.now(), query: null}));
+  }
+}
+
+var CASES = {
+  'harness-loads': {
+    check: function (win, doc) {
+      return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;
+    }
+  }
+};
+
+function finish(text) { document.getElementById('result').textContent = text; }
+
+(function run() {
+  var c = CASES[CASE];
+  if (!c) { finish('FAIL ' + CASE + ': unknown case'); return; }
+  var go = function (fixture) {
+    try { if (c.setup) c.setup(fixture); else seed({}, null); } catch (e) { finish('FAIL ' + CASE + ': setup ' + e); return; }
+    var frame = document.createElement('iframe');
+    frame.src = '/out/tizen/index.html';
+    frame.onload = function () {
+      setTimeout(function () {
+        var why;
+        try { why = c.check(frame.contentWindow, frame.contentDocument); } catch (e) { why = 'check threw ' + e; }
+        finish(why ? 'FAIL ' + CASE + ': ' + why : 'PASS ' + CASE);
+      }, c.wait || 1500);
+    };
+    document.body.appendChild(frame);
+  };
+  var x = new XMLHttpRequest();
+  x.open('GET', 'weather-denver.json');
+  x.onload = function () { go(JSON.parse(x.responseText)); };
+  x.onerror = function () { finish('FAIL ' + CASE + ': fixture not loaded'); };
+  x.send();
+})();
+</script>

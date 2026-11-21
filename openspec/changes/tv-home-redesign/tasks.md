@@ -6,7 +6,7 @@ needs Google Chrome and Python 3).
 
 ## 1. Test harness and assets
 
-- [ ] 1.1 UI test harness: create `tests/ui/run.sh` (builds `python3 tizen/build.py --preview`, serves the repo root
+- [x] 1.1 UI test harness: create `tests/ui/run.sh` (builds `python3 tizen/build.py --preview`, serves the repo root
       on 127.0.0.1:8766, runs Chrome `--headless=new --window-size=1920,1080 --virtual-time-budget=8000 --dump-dom`
       on `tests/ui/harness.html?case=<name>` for each case, fails on any `FAIL` line or a missing `PASS`),
       `tests/ui/harness.html` (seeds `fmtv.weather` from `tests/ui/weather-denver.json` and `fmtv.prefs`, loads

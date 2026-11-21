@@ -1,0 +1,17 @@
+{
+  "_note": "Open-Meteo forecast shape for Denver (39.73915, -104.9847). Times are filled in by harness.html relative to the run: hourly[k] is now + (k + 1) hours. Temperatures and codes written by hand.",
+  "latitude": 39.73915,
+  "longitude": -104.9847,
+  "utc_offset_seconds": -25200,
+  "timezone": "America/Denver",
+  "current": {"temperature_2m": 41.2, "weather_code": 3, "is_day": 1},
+  "daily": {
+    "time": [], "temperature_2m_max": [47.1], "temperature_2m_min": [29.8],
+    "sunrise": [], "sunset": [], "weather_code": [3], "uv_index_max": [2.1]
+  },
+  "hourly": {
+    "temperature_2m": [38.4, 36.1, 35.0, 33.7, 32.9, 32.2],
+    "weather_code": [3, 2, 2, 1, 1, 0],
+    "is_day": [1, 1, 0, 0, 0, 0]
+  }
+}
