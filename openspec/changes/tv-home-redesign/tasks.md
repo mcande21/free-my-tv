@@ -126,7 +126,7 @@ needs Google Chrome and Python 3).
 
 ## 5. Ship to the TV
 
-- [ ] 5.1 owner build (reopened 2026-11-21: rebuild after 3.9-3.11): set `tizen/config.xml` `version="1.5.1"` (design Decision 13, committed "chore(tizen): 1.5.1 for the fork") and the owner's `config.properties` (design Decision 9), `python3 tizen/build.py`, expect
+- [x] 5.1 owner build (reopened 2026-11-21: rebuild after 3.9-3.11): set `tizen/config.xml` `version="1.5.1"` (design Decision 13, committed "chore(tizen): 1.5.1 for the fork") and the owner's `config.properties` (design Decision 9), `python3 tizen/build.py`, expect
       `Built FreeMyTV-tizen.wgt`; before/after screenshots from `--preview` at 1920 x 1080 into the mission scratch
       folder; re-run the audit list and record which patterns are gone · no commit (config is git-ignored)
 - [ ] 5.2 fork and release (owner's yes first): `gh repo fork simbasjungles/free-my-tv --clone=false`, push branch
