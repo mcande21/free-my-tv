@@ -51,6 +51,22 @@ var CASES = {
       });
     }
   },
+  // Breaks if the web build still packs the shared Material icon, or if the Android app's icon changed.
+  'icons-phosphor': {
+    check: function () {
+      var ANDROID_SETTINGS_SHA256 = '1f2105efab9a1df64fd0d4a14049ef842b694bececac94c34c5e1a23d7b87d1a';   // upstream 0e33f16
+      function bytes(url) { return fetch(url, {cache: 'no-store'}).then(function (r) { return r.arrayBuffer(); }); }
+      function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return (b < 16 ? '0' : '') + b.toString(16); }).join(''); }
+      return Promise.all([bytes('/out/tizen/symbols/settings.png'), bytes('/app/assets/symbols/settings.png')]).then(function (b) {
+        return crypto.subtle.digest('SHA-256', b[1]).then(function (androidHash) {
+          if (hex(androidHash) !== ANDROID_SETTINGS_SHA256) return 'the Android settings icon changed';
+          return crypto.subtle.digest('SHA-256', b[0]).then(function (webHash) {
+            return hex(webHash) === ANDROID_SETTINGS_SHA256 ? 'the web build still packs the Material settings icon' : '';
+          });
+        });
+      });
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

@@ -21,7 +21,7 @@ needs Google Chrome and Python 3).
       `document.fonts.check('400 32px Geist')` in the iframe; run, expect FAIL (no faces declared) · add the four
       `@font-face` rules to `web/home.css` above the Inter ones · gate, expect PASS · commit
       "feat(web): Outfit and Geist faces"
-- [ ] 1.3 icons, web only: add a `PHOSPHOR` map and a `--set phosphor` flag to `tools/make_symbols.py` (same app
+- [x] 1.3 icons, web only: add a `PHOSPHOR` map and a `--set phosphor` flag to `tools/make_symbols.py` (same app
       names as `MAP`, Phosphor regular names from `src/regular/selection.json`); render with Pillow in a throwaway
       venv into `web/symbols/` with `LICENSE-phosphor` (MIT); in `tools/webapp.py` `files()` copy `web/symbols/` after
       `app/assets/symbols/` so web names replace shared ones; also copy `OFL-outfit-geist.txt` from `web/fonts/`.
