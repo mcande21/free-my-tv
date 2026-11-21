@@ -20,7 +20,7 @@ the other surfaces; a UI test that drives the real page.
    ridge-near `#10141A`, ink `#ECE6DC`, muted `#97A0AC`, accent amber `#E3A15E` (saturation under 80%), day ground
    `#E9E4DC`, day ink `#1C2128`. Shadows `rgba(6, 10, 16, a)`. Radii 8 / 16 / 28. Rejected: a preprocessor (adds a
    build step the repo does not have).
-2. **Type: Outfit + Geist, local woff2, two weights each.** Outfit 300 and 500 for the time and headings; Geist 400
+2. **Type: Outfit + Geist, local woff2.** Outfit 300 and 500 for headings, Outfit 400 for the time (Decision 17); Geist 400
    and 600 for interface text; `font-variant-numeric: tabular-nums` on the time and temperatures. Files from
    `@fontsource/outfit` 5.3.0 and `@fontsource/geist-sans` 5.3.0 (OFL-1.1), latin subset, with `OFL.txt` beside them.
    Inter stays in the stack after Geist (home.css:29 and :671) and its files stay, for Cyrillic, Greek and Vietnamese glyphs the latin subsets lack. Rejected: Inter as the face (the audit's first finding); deleting Inter (other languages would fall to system fonts); a CDN (the app runs offline and from file://).
@@ -37,9 +37,10 @@ the other surfaces; a UI test that drives the real page.
    dusk = sunset - 30 min to sunset + 45 min; day between; night otherwise. No weather: night 19:00-07:00, else day.
 5. **Weather line** reuses `weatherParts()` for the current reading and adds three hourly labels from
    `hourly.time`/`hourly.temperature_2m` after the current hour. Hidden when `Prefs.weather()` is false or no weather.
-6. **Shelf focus** widens the tile with `transform: scale` on the icon and a name label that fades in (opacity only);
-   the tile's box keeps one width so the row does not reflow. The accent is a 3 px amber underline plus an amber
-   tinted shadow.
+6. **Shelf focus** (amended 2026-11-21, ruling tiles-a) scales the whole focused tile to 1.08 (Android TV focus
+   guidance: 1.025, 1.05 or 1.1) with a 3 px amber ring and an amber tinted glow, and fades in its name under it
+   (opacity only); every tile keeps one box width so the row does not reflow. Replaces the underline and the
+   icon-only scale. The tile's start-edge `pad` inside the safe area must cover the 4% growth (at least 10 px).
 7. **Icons, web only:** the PNGs in `app/assets/symbols/` are shared with the Android app, so they stay. Phosphor
    renders into a new `web/symbols/` folder, and `tools/webapp.py` `files()` copies it after `app/assets/symbols/`,
    so a web name replaces the shared one in the LG and Samsung packages only. `tools/make_symbols.py` gains a Phosphor
@@ -68,6 +69,20 @@ the other surfaces; a UI test that drives the real page.
     processing.
 13. **Version 1.5.1 in the fork:** `tizen/config.xml` `version="1.5.1"`, so the TV sees a newer package than the
     installed 1.5.0 and no same-version reinstall question arises. Rejected: shipping 1.5.0 again (untested path).
+16. **Shelf tiles share one surface** (ruling tiles-a, 2026-11-21). Six tiles at once (`SHELF_VISIBLE` 6), 16:9, at
+   most 240 x 135; every tile is the same smoked slate `rgba(28, 33, 40, 0.62)` with a 1 px inset
+   `rgba(236, 230, 220, 0.14)` line; no brand gradient on the shelf (the SHELF table's colours stay for All Apps).
+   The face, in order: our white logo from `web/icons/mono/` when the app's SHELF key has one; else the app's own
+   icon, centred on the slate; else its name as a white Geist 600 wordmark. White logos: Simple Icons 16.38.0 (CC0)
+   with `fill="#FFFFFF"` for netflix, youtube, max, appletv, spotify, paramountplus, jellyfin, plex, twitch; Prime
+   Video from our `icons/prime.png` turned white with its alpha kept. Simple Icons has no Prime Video, Disney+, Hulu,
+   Peacock, Globoplay or NFL (404 at tag 16.38.0, checked 2026-11-21), so those take the wordmark unless the TV
+   gives a real icon. Evidence: 00_research tv-home-designs.md F1, F5. Rejected: brand fill on focus (option B),
+   brand banners (option C), a CSS `filter` to whiten (it flattens multi-colour logos).
+17. **Type steps from tvOS** (ruling type-steps, 2026-11-21; Apple HIG typography: body 29, minimum 23, headline 38).
+   Clock 160 px Outfit 400 (was 176 px 300); date 38 px Geist 500 (was 40); weather line 32 px on two lines, the
+   current reading over the hours; focused app name 30 px Geist 600 (was 24). Nothing on the no-picks home under
+   29 px. Adds `web/fonts/Outfit-400.woff2` from `@fontsource/outfit@5.3.0` (latin). Evidence: tv-home-designs.md F3.
 
 ## Measurement method
 
@@ -121,6 +136,8 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 | Every place the font rule lives | `grep -rln Inter web docs` then `grep -rn "'Inter'" web` | web/home.css:12-17 (@font-face), :29 (body), :671 (body.rtl); home.js/tv.js hits are `setInterval`; docs/ out of scope, keeps its own |
 
 ## Rulings
+
+- 2026-11-21: T2 amendment: uniform shelf tiles with white logos and an amber ring, six 240 px tiles, tvOS type steps (Decisions 2 and 6 amended, 16-17 added; spec Shelf focus reworded, Shelf tiles share one surface and Type reads from the couch added; tasks 3.9-3.11 added, 5.1 reopened to rebuild). (Morpheus: tiles A, six larger, type all of it; research 00_research/tv-home-designs.md)
 
 - 2026-11-20: direction Front Range dusk; layout Horizon stage; delivery through the owner's fork. (Morpheus)
 - 2026-11-21: T2 amendment: Front Range photographs replace the canvas ridges (Decision 3, new 14-15; spec Horizon follows the sun reworded, Photo cannot load and Text stays readable added; task 3.6 superseded, 3.7-3.8 added). (Morpheus: photos, mountains not city, these four picks)

@@ -91,6 +91,30 @@ needs Google Chrome and Python 3).
       mission's scratch on screenshots of all four phases, expect some text box under 3:1 before the scrim ·
       change · rerun, expect every box at or over 3:1 · gate, expect PASS · commit "feat(web): text stays readable
       over the photos"
+- [ ] 3.9 white logos (design Decision 16; spec: Shelf tiles share one surface): fetch the nine Simple Icons 16.38.0
+      SVGs by `gh api repos/simple-icons/simple-icons/contents/icons/<name>.svg?ref=16.38.0`, set `fill="#FFFFFF"`
+      and a width and height, into `web/icons/mono/`; make `mono/prime.png` from `icons/prime.png` (RGB to white,
+      alpha kept) with a Pillow script kept in the mission scratch, not the repo; `web/icons/mono/CREDITS.txt`
+      (source, tag, CC0). Add the mono path as a fifth SHELF column; confirm `tools/webapp.py` packs
+      `web/icons/mono/` (add it if not). Failing test first: case `tiles-mono` (preview apps: the Netflix tile's img
+      `src` ends `icons/mono/netflix.svg`; the Disney+ tile shows a visible word and no img); run, expect FAIL · change
+      · gate, expect PASS · commit "feat(web): white logos for the shelf"
+- [ ] 3.10 one surface, six tiles, ring focus (Decisions 6 and 16; specs: Shelf focus, Shelf tiles share one
+      surface): `SHELF_VISIBLE` 6, tile width at most 240; shelf tiles take the slate surface instead of `paint()`;
+      `.tile.focus` scale 1.08 with `0 0 0 3px #E3A15E` and an amber glow; drop the underline and the icon-only
+      scale. Failing tests first: new case `tiles-surface` (every visible tile has the same computed
+      background-color; six tiles inside the safe area, each 240 px wide by `offsetWidth`); update `focus-accent`
+      (ring colour `rgb(227, 161, 94)` in the focused tile's box-shadow) and `shelf-focus` (tile 1's computed
+      transform scale 1.08, tile 0 back to 1, tile 2 `offsetLeft` unchanged); `safe-margin` must still pass with
+      focus on tile 0; run, expect FAIL · change · gate, expect PASS, count cases defined vs ran · commit
+      "feat(web): one surface for the shelf"
+- [ ] 3.11 type steps (Decision 17; spec: Type reads from the couch): add `web/fonts/Outfit-400.woff2`
+      (`@fontsource/outfit@5.3.0`, latin) and its `@font-face`; `#clock` 160 px weight 400, `.date` 38 px, the weather
+      line on two lines at 32 px, `.tile .label` 30 px. Failing tests first: `fonts-loaded` adds
+      `document.fonts.check('400 160px Outfit')`; new case `type-scale` (computed sizes: clock 160 and weight 400,
+      date 38, label 30; every text box under `#clock`, `#weatherline` and `.tile .label` at 29 px or more); run,
+      expect FAIL · change · gate, expect PASS · rerun the readability measurement (Decision 15) on all four phases,
+      expect every box at 3:1 or more · commit "feat(web): type steps for the couch"
 
 ## 4. Must not change
 
@@ -102,7 +126,7 @@ needs Google Chrome and Python 3).
 
 ## 5. Ship to the TV
 
-- [x] 5.1 owner build: set `tizen/config.xml` `version="1.5.1"` (design Decision 13, committed "chore(tizen): 1.5.1 for the fork") and the owner's `config.properties` (design Decision 9), `python3 tizen/build.py`, expect
+- [ ] 5.1 owner build (reopened 2026-11-21: rebuild after 3.9-3.11): set `tizen/config.xml` `version="1.5.1"` (design Decision 13, committed "chore(tizen): 1.5.1 for the fork") and the owner's `config.properties` (design Decision 9), `python3 tizen/build.py`, expect
       `Built FreeMyTV-tizen.wgt`; before/after screenshots from `--preview` at 1920 x 1080 into the mission scratch
       folder; re-run the audit list and record which patterns are gone · no commit (config is git-ignored)
 - [ ] 5.2 fork and release (owner's yes first): `gh repo fork simbasjungles/free-my-tv --clone=false`, push branch

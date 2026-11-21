@@ -55,12 +55,33 @@ large text) against the photograph behind them, in every phase.
 - **THEN** the clock's contrast against the pixels behind it is at least 3:1
 
 ### Requirement: Shelf focus
-The focused shelf tile SHALL be wider than the others, show its app name, and carry the amber accent; other tiles show
-only their icons.
+The focused shelf tile SHALL grow by scale, show its app name beneath it, and carry an amber ring; other tiles show
+only their faces, and no tile changes its box width.
 
 #### Scenario: Moving focus along the shelf
 - **WHEN** focus moves from the first shelf tile to the second
-- **THEN** the second tile is the only wide tile with a visible name, and the first returns to icon-only
+- **THEN** the second tile is the only scaled tile with a visible name and an amber ring, the first returns to its
+  resting size with its name hidden, and the third tile's position does not change
+
+### Requirement: Shelf tiles share one surface
+The shelf SHALL show up to six 16:9 tiles at once, every tile on the same surface colour, each with a white logo, the
+app's own icon, or the app's name in white when neither exists.
+
+#### Scenario: App with a known logo
+- **WHEN** the shelf holds Netflix
+- **THEN** its tile shows the white Netflix logo on the shared surface
+
+#### Scenario: App with no logo
+- **WHEN** the shelf holds an app with no bundled logo and no loadable icon
+- **THEN** its tile shows the app's name in white on the shared surface
+
+### Requirement: Type reads from the couch
+Text on the home screen with no picks SHALL be at least 29 px: the clock, the date, the weather line and the focused
+app's name.
+
+#### Scenario: No-picks home at dusk
+- **WHEN** the home screen shows with no picks
+- **THEN** every text box in the clock, date, weather line and shelf name has a computed font size of 29 px or more
 
 ### Requirement: Crypto prices off in this build
 The home screen SHALL CONTINUE TO show crypto prices only when the build or Home Settings turns them on; the owner's
