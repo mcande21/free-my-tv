@@ -268,6 +268,26 @@ var CASES = {
       return '';
     }
   },
+  // Kept behaviour: breaks if crypto prices show on the home screen while turned off.
+  'crypto-off': {
+    setup: function (fixture) { seed({quotes: false}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var q = doc.getElementById('quotes'), cs = win.getComputedStyle(q);
+      var hidden = cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0;
+      return hidden || q.textContent.trim() === '' ? '' : 'prices show with crypto off: "' + q.textContent.trim() + '"';
+    }
+  },
+  // Kept behaviour: breaks if Down on the shelf no longer opens the drawer.
+  'drawer-opens': {
+    still: true,
+    check: function (win, doc) {
+      if (!doc.querySelector('#tiles .tile.focus')) return 'the shelf does not have focus at start';
+      press(win, doc, 40);
+      return later(300).then(function () {
+        return doc.body.classList.contains('drawer-open') ? '' : 'Down on the shelf did not open the drawer';
+      });
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

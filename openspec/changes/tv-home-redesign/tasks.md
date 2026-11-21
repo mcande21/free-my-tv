@@ -83,7 +83,7 @@ needs Google Chrome and Python 3).
 
 ## 4. Must not change
 
-- [ ] 4.1 regressions (specs: Crypto prices off in this build; Way back unchanged): cases `crypto-off` (prefs and
+- [x] 4.1 regressions (specs: Crypto prices off in this build; Way back unchanged): cases `crypto-off` (prefs and
       config with show_crypto false: `#quotes` empty or hidden) and `drawer-opens` (focus on shelf, dispatch
       `keydown` Down: body gains `drawer-open`). Run against the branch before group 2 lands to confirm they PASS
       on the old code too (behaviour kept), and keep them in the suite · commit "test(ui): crypto and drawer
