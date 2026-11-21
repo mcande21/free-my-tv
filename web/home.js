@@ -790,15 +790,16 @@
     renderWeatherLine();
   }
 
-  /** Under the clock: now (temperature and condition), then the next three hours. Hidden with no weather or weather off. */
+  /** Under the clock: now (temperature and condition), and under it the next three hours. Hidden with no weather or weather off. */
   function renderWeatherLine() {
     var line = $('weatherline'), w = Data.weather;
     line.innerHTML = '';
     if (!Prefs.weather() || !w) { line.className = ''; updateHorizon(); return; }
     el('span', 'now', line, Data.degrees(w.temp));
     el('span', 'cond', line, Data.condition(w.code, w.isDay));
+    var hours = el('div', 'hours', line);
     for (var i = 0; i < 3 && w.hours && i < w.hours.length; i++) {
-      var h = el('span', 'hour', line);
+      var h = el('span', 'hour', hours);
       el('span', 't', h, Data.hour(w.hours[i].at));
       el('span', 'd', h, Data.degrees(w.hours[i].temp));
     }

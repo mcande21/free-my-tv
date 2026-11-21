@@ -11,6 +11,7 @@
 /* Front Range type: Outfit for the time and headings, Geist for the interface (web/fonts, latin subsets, OFL: see
    web/fonts/OFL-outfit-geist.txt). Inter below stays in the stack for the scripts these subsets lack. */
 @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-300.woff2') format('woff2'); font-weight: 300; font-style: normal; }
+@font-face { font-family: 'Outfit'; src: url('fonts/Outfit-400.woff2') format('woff2'); font-weight: 400; font-style: normal; }
 @font-face { font-family: 'Outfit'; src: url('fonts/Outfit-500.woff2') format('woff2'); font-weight: 500; font-style: normal; }
 @font-face { font-family: 'Geist'; src: url('fonts/Geist-400.woff2') format('woff2'); font-weight: 400; font-style: normal; }
 @font-face { font-family: 'Geist'; src: url('fonts/Geist-600.woff2') format('woff2'); font-weight: 600; font-style: normal; }
@@ -339,8 +340,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   left: 96px;
   top: 54px;
   font-family: 'Outfit', 'Geist', 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 176px;
-  font-weight: 300;
+  font-size: 160px;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1;
   -webkit-font-feature-settings: 'tnum';
@@ -348,12 +349,13 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   color: #1C2128;
   display: none;
 }
-#clock .date { display: block; font-family: 'Geist', 'Inter', 'Helvetica Neue', Arial, sans-serif; font-size: 40px; font-weight: 500; letter-spacing: 0; margin-top: 18px; color: #5F6672; }
+#clock .date { display: block; font-family: 'Geist', 'Inter', 'Helvetica Neue', Arial, sans-serif; font-size: 38px; font-weight: 500; letter-spacing: 0; margin-top: 18px; color: #5F6672; }
 /* The weather line under the date: now in ink, the next three hours muted, numbers in tabular figures. */
 #weatherline { position: absolute; left: 96px; top: 300px; display: none; font-size: 32px; font-weight: 400; color: #5F6672; white-space: nowrap; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
 .no-picks #weatherline.on { display: block; }
 #weatherline .now { color: #1C2128; font-weight: 600; margin-right: 14px; }
 #weatherline .cond { margin-right: 40px; }
+#weatherline .hours { display: block; margin-top: 6px; }
 #weatherline .hour { margin-right: 32px; }
 #weatherline .hour .t { margin-right: 10px; }
 #weatherline .hour .d { color: #1C2128; }
@@ -432,7 +434,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* Focus grows the whole tile to 1.08 with an amber ring (the row never moves: its box keeps its width) and shows its
    name under it (Decision 6). */
 .tile.focus { -webkit-transform: scale(1.08); transform: scale(1.08); box-shadow: 0 0 0 3px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.35); z-index: 2; }
-.tile .label { position: absolute; left: -8%; right: -8%; top: 100%; margin-top: 16px; text-align: center; font-size: 24px; font-weight: 600; color: #1C2128; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; -webkit-transition: opacity 0.22s; transition: opacity 0.22s; }
+.tile .label { position: absolute; left: -8%; right: -8%; top: 100%; margin-top: 16px; text-align: center; font-size: 30px; font-weight: 600; color: #1C2128; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; -webkit-transition: opacity 0.22s; transition: opacity 0.22s; }
 .night .tile .label { color: #ECE6DC; }
 .tile.focus .label { opacity: 1; }
 .tile.focus::after { opacity: 1; }

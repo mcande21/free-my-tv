@@ -38,14 +38,15 @@ function seed(prefs, weatherBody) {
 }
 
 var CASES = {
-  // Breaks if Outfit 300 or Geist 400 is not declared as a local @font-face the page can load.
+  // Breaks if Outfit 300, Outfit 400 (the clock) or Geist 400 is not declared as a local @font-face the page can load.
+  // The weight must match exactly: fonts.load() falls back to the nearest weight of the family.
   'fonts-loaded': {
     check: function (win, doc) {
-      var want = [['300 96px Outfit', 'Outfit'], ['400 32px Geist', 'Geist']];
+      var want = [['300 96px Outfit', 'Outfit', '300'], ['400 160px Outfit', 'Outfit', '400'], ['400 32px Geist', 'Geist', '400']];
       return Promise.all(want.map(function (w) { return doc.fonts.load(w[0]); })).then(function (sets) {
         for (var i = 0; i < sets.length; i++) {
-          var ok = sets[i].some(function (f) { return f.family.replace(/["']/g, '') === want[i][1] && f.status === 'loaded'; });
-          if (!ok) return want[i][1] + ' did not load';
+          var ok = sets[i].some(function (f) { return f.family.replace(/["']/g, '') === want[i][1] && f.weight === want[i][2] && f.status === 'loaded'; });
+          if (!ok) return want[i][1] + ' ' + want[i][2] + ' did not load';
         }
         return '';
       });
@@ -246,6 +247,36 @@ var CASES = {
         var moved = tiles[2].getBoundingClientRect().left - thirdLeft;
         return Math.abs(moved) < 0.5 ? '' : 'tile 2 moved ' + moved + ' px';
       });
+    }
+  },
+  // Type steps (Decision 17): breaks if the clock, date or focused name leaves its size, or if any home text drops under
+  // 29 px (spec: Type reads from the couch).
+  'type-scale': {
+    still: true,
+    setup: function (fixture) { seed({}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      function size(n) { return parseFloat(win.getComputedStyle(n).fontSize); }
+      var clock = doc.querySelector('#clock'), date = doc.querySelector('#clock .date'), label = doc.querySelector('#tiles .tile .label');
+      if (!clock || !date || !label) return 'clock, date or shelf name missing';
+      if (size(clock) !== 160 || win.getComputedStyle(clock).fontWeight !== '400') return 'clock ' + size(clock) + ' px weight ' + win.getComputedStyle(clock).fontWeight;
+      if (size(date) !== 38) return 'date ' + size(date) + ' px';
+      if (size(label) !== 30) return 'shelf name ' + size(label) + ' px';
+      var all = doc.querySelectorAll('#clock, #clock *, #weatherline, #weatherline *, #tiles .tile .label');
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].textContent.trim() && size(all[i]) < 29) return (all[i].id || all[i].className) + ' is ' + size(all[i]) + ' px';
+      }
+      return '';
+    }
+  },
+  // Breaks if the hours share a line with the current reading (Decision 17: now over the hours).
+  'weather-two-lines': {
+    still: true,
+    setup: function (fixture) { seed({}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var now = doc.querySelector('#weatherline .now'), hour = doc.querySelector('#weatherline .hour');
+      if (!now || !hour) return 'weather line has no current reading or no hours';
+      var a = now.getBoundingClientRect(), b = hour.getBoundingClientRect();
+      return b.top >= a.bottom - 1 ? '' : 'first hour at y ' + Math.round(b.top) + ' is beside the current reading (bottom ' + Math.round(a.bottom) + ')';
     }
   },
   // Breaks if the shelf shows other than six tiles at once, if a tile is not 240 px wide, or if tiles differ in surface

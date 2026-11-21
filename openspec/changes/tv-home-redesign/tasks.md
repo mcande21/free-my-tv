@@ -108,7 +108,7 @@ needs Google Chrome and Python 3).
       transform scale 1.08, tile 0 back to 1, tile 2 `offsetLeft` unchanged); `safe-margin` must still pass with
       focus on tile 0; run, expect FAIL · change · gate, expect PASS, count cases defined vs ran · commit
       "feat(web): one surface for the shelf"
-- [ ] 3.11 type steps (Decision 17; spec: Type reads from the couch): add `web/fonts/Outfit-400.woff2`
+- [x] 3.11 type steps (Decision 17; spec: Type reads from the couch): add `web/fonts/Outfit-400.woff2`
       (`@fontsource/outfit@5.3.0`, latin) and its `@font-face`; `#clock` 160 px weight 400, `.date` 38 px, the weather
       line on two lines at 32 px, `.tile .label` 30 px. Failing tests first: `fonts-loaded` adds
       `document.fonts.check('400 160px Outfit')`; new case `type-scale` (computed sizes: clock 160 and weight 400,
