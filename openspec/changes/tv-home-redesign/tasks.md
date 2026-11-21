@@ -59,7 +59,7 @@ needs Google Chrome and Python 3).
       temperatures, in that order), `weather-none` (no `fmtv.weather`: `#weatherline` hidden, `#clock` box
       unchanged), `weather-off` (prefs weather false: hidden); run, expect FAIL · change · gate, expect PASS ·
       commit "feat(web): weather line under the clock"
-- [ ] 3.3 sun phase (spec: Horizon follows the sun): first confirm `grep -rnw Sun web` shows only the `'weekday|Sun'` string at data.js:29. Create
+- [x] 3.3 sun phase (spec: Horizon follows the sun): first confirm `grep -rnw Sun web` shows only the `'weekday|Sun'` string at data.js:29. Create
       `web/sun.js` (global `Sun`, ES5, `Sun.phase(nowMs, sunriseMs, sunsetMs)` per design Decision 4, falling back
       to clock hours when either time is missing, 0 or not a finite number) and `tests/WebSunTest.js` (vm sandbox like
       WebPrefsTest.js) added to `tools/test-web.sh`. Failing tests first, values derived by hand for sunrise 06:58,
