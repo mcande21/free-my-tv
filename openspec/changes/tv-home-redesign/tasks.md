@@ -135,3 +135,8 @@ needs Google Chrome and Python 3).
 - [ ] 5.3 install: TizenBrew Installer, connect 192.168.0.21, install `mcande21/free-my-tv`; verify
       `GET http://192.168.0.21:8001/api/v2/applications/FreeMyTVio.FreeMyTV` shows `"version":"1.5.1"` and launches;
       the owner confirms the screen
+- [ ] 5.4 Home button (ruling home-button; Decisions 9 and 13): `tizen/config.xml` `version="1.5.2"` (commit "chore(tizen):
+      1.5.2 for the Home button") and `samsung_home_button=true` in the owner's `config.properties`; gate;
+      `python3 tizen/build.py`, expect the With samsung_home_button line and the package's `config.xml` carrying
+      `reload="disable"`; release `v1.5.2-frontrange` on the fork; install with TizenBrew Installer; verify the TV API
+      shows `"version":"1.5.2"` and launches; the owner presses Home in another app and Free My TV comes back

@@ -56,7 +56,8 @@ the other surfaces; a UI test that drives the real page.
    each (hierarchy). Shelf focus: 220 ms scale and label fade (feedback). Sky: 2 s crossfade between phase canvases
    (state transition). Drawer: the existing 380 ms slide (state transition). Transform and opacity only.
 9. **Owner's build settings** live in the owner's `config.properties` (git-ignored): `city=Denver`,
-   `latitude=39.73915`, `longitude=-104.9847`, `show_crypto=false`, `temperature=auto`.
+   `latitude=39.73915`, `longitude=-104.9847`, `show_crypto=false`, `temperature=auto`; from 1.5.2
+   `samsung_home_button=true` (ruling home-button): Home in an app opened from Free My TV brings it back.
 10. **Delivery:** fork to `mcande21/free-my-tv`, push the branch, publish a release carrying the built
     `FreeMyTV-tizen.wgt` (unsigned); TizenBrew Installer installs it from the fork and re-signs it on Tizen 7+ with
     the owner's saved certificate, the same one as the current install, so it installs as an update.
@@ -69,6 +70,8 @@ the other surfaces; a UI test that drives the real page.
     processing.
 13. **Version 1.5.1 in the fork:** `tizen/config.xml` `version="1.5.1"`, so the TV sees a newer package than the
     installed 1.5.0 and no same-version reinstall question arises. Rejected: shipping 1.5.0 again (untested path).
+    Then 1.5.2 (ruling home-button) for the Home-button manifest, over the installed 1.5.1; if the TV refuses the
+    upgrade, stop and ask before any uninstall.
 16. **Shelf tiles share one surface** (ruling tiles-a, 2026-11-21). Six tiles at once (`SHELF_VISIBLE` 6), 16:9, at
    most 240 x 135; every tile is the same smoked slate `rgba(28, 33, 40, 0.62)` with a 1 px inset
    `rgba(236, 230, 220, 0.14)` line; no brand gradient on the shelf (the SHELF table's colours stay for All Apps).
@@ -136,6 +139,8 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 | Every place the font rule lives | `grep -rln Inter web docs` then `grep -rn "'Inter'" web` | web/home.css:12-17 (@font-face), :29 (body), :671 (body.rtl); home.js/tv.js hits are `setInterval`; docs/ out of scope, keeps its own |
 
 ## Rulings
+
+- 2026-11-21: T2 amendment: Home button: build 1.5.2 with samsung_home_button=true, release v1.5.2-frontrange, install (Decisions 9 and 13; task 5.4 added). (Morpheus: "go for it" to rebuild, release and install; uninstall still needs his yes)
 
 - 2026-11-21: T2 amendment: uniform shelf tiles with white logos and an amber ring, six 240 px tiles, tvOS type steps (Decisions 2 and 6 amended, 16-17 added; spec Shelf focus reworded, Shelf tiles share one surface and Type reads from the couch added; tasks 3.9-3.11 added, 5.1 reopened to rebuild). (Morpheus: tiles A, six larger, type all of it; research 00_research/tv-home-designs.md)
 
