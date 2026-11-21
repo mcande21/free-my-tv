@@ -99,7 +99,7 @@ needs Google Chrome and Python 3).
       `web/icons/mono/` (add it if not). Failing test first: case `tiles-mono` (preview apps: the Netflix tile's img
       `src` ends `icons/mono/netflix.svg`; the Disney+ tile shows a visible word and no img); run, expect FAIL · change
       · gate, expect PASS · commit "feat(web): white logos for the shelf"
-- [ ] 3.10 one surface, six tiles, ring focus (Decisions 6 and 16; specs: Shelf focus, Shelf tiles share one
+- [x] 3.10 one surface, six tiles, ring focus (Decisions 6 and 16; specs: Shelf focus, Shelf tiles share one
       surface): `SHELF_VISIBLE` 6, tile width at most 240; shelf tiles take the slate surface instead of `paint()`;
       `.tile.focus` scale 1.08 with `0 0 0 3px #E3A15E` and an amber glow; drop the underline and the icon-only
       scale. Failing tests first: new case `tiles-surface` (every visible tile has the same computed

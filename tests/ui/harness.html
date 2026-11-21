@@ -101,7 +101,7 @@ var CASES = {
         var tile = doc.querySelector('#tiles .tile.focus');
         if (!tile) return 'no focused shelf tile after Right';
         if (tile !== doc.querySelectorAll('#tiles .tile')[1]) return 'Right did not focus the second tile';
-        if (win.getComputedStyle(tile).boxShadow.indexOf(AMBER) < 0) return 'focused tile has no amber underline: ' + win.getComputedStyle(tile).boxShadow;
+        if (win.getComputedStyle(tile).boxShadow.indexOf(AMBER + ' 0px 0px 0px 3px') < 0) return 'focused tile has no 3 px amber ring: ' + win.getComputedStyle(tile).boxShadow;
         press(win, doc, 38);
         return later(400).then(function () {
           var round = doc.querySelector('.round.focus');
@@ -224,7 +224,8 @@ var CASES = {
       });
     }
   },
-  // Breaks if the focused app shows no name, if an unfocused one does, or if focusing moves its neighbours.
+  // Breaks if the focused app shows no name, if an unfocused one does, if the focused tile does not grow to 1.08 or the
+  // one left behind stays grown, or if focusing moves its neighbours.
   'shelf-focus': {
     still: true,
     check: function (win, doc) {
@@ -239,9 +240,33 @@ var CASES = {
         if (label(tiles[1]).textContent.trim() === '') return 'tile 1 label is empty';
         if (seen(tiles[1]) !== 1) return 'focused tile 1 name opacity ' + seen(tiles[1]);
         if (seen(tiles[0]) !== 0) return 'unfocused tile 0 name opacity ' + seen(tiles[0]);
+        function scale(t) { var m = /^matrix\(([^,]+),/.exec(win.getComputedStyle(t).transform); return m ? parseFloat(m[1]) : 1; }
+        if (Math.abs(scale(tiles[1]) - 1.08) > 0.001) return 'focused tile 1 scale ' + scale(tiles[1]);
+        if (Math.abs(scale(tiles[0]) - 1) > 0.001) return 'unfocused tile 0 scale ' + scale(tiles[0]);
         var moved = tiles[2].getBoundingClientRect().left - thirdLeft;
         return Math.abs(moved) < 0.5 ? '' : 'tile 2 moved ' + moved + ' px';
       });
+    }
+  },
+  // Breaks if the shelf shows other than six tiles at once, if a tile is not 240 px wide, or if tiles differ in surface
+  // colour (a brand gradient back on the shelf) (Decision 16).
+  'tiles-surface': {
+    still: true,
+    check: function (win, doc) {
+      var tiles = doc.querySelectorAll('#tiles .tile'), shown = [];
+      for (var i = 0; i < tiles.length; i++) {
+        var r = tiles[i].getBoundingClientRect();
+        if (parseFloat(win.getComputedStyle(tiles[i]).opacity) > 0 && r.left >= 96 && r.right <= 1824) shown.push(tiles[i]);
+      }
+      if (shown.length !== 6) return shown.length + ' tiles shown, want 6';
+      var bg = win.getComputedStyle(shown[0]).backgroundColor, img = win.getComputedStyle(shown[0]).backgroundImage;
+      if (bg === 'rgba(0, 0, 0, 0)') return 'tile 0 has no surface colour';
+      for (var j = 0; j < shown.length; j++) {
+        if (shown[j].offsetWidth !== 240) return 'tile ' + j + ' is ' + shown[j].offsetWidth + ' px wide';
+        var cs = win.getComputedStyle(shown[j]);
+        if (cs.backgroundColor !== bg || cs.backgroundImage !== img) return 'tile ' + j + ' surface ' + cs.backgroundColor + ' ' + cs.backgroundImage + ' differs from tile 0';
+      }
+      return '';
     }
   },
   // Breaks if a shelf app with a bundled white logo shows anything else (its word, a brand icon), or if an app with no

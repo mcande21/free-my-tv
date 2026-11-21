@@ -123,9 +123,9 @@
     ['plex', /^cdp-30$|plex/i, /^plex$/i, ['#E5A00D', '#8A5F05'], 'plex.svg'],
     ['twitch', /twitch/, /^twitch$/i, ['#9146FF', '#4B1FA8'], 'twitch.svg']
   ];
-  // Apps shown at once, as on Android: 8 (today's smallest tiles, 178 wide); the shelf scrolls for the rest. The
-  // built-in list keeps 8 too.
-  var SHELF_VISIBLE = 8, FEW_APPS = 8;
+  // Apps shown at once: 6 (240 wide, ruling six-tiles; design Decision 16); the shelf scrolls for the rest.
+  // FEW_APPS: the built-in list still keeps 8.
+  var SHELF_VISIBLE = 6, FEW_APPS = 8;
   // The safe area (Android TV layout guide: a 5% margin, 48dp x 27dp at 960 x 540): 96 px at the sides, 54 px at the top
   // and bottom of the 1920 x 1080 stage. SHELF_NAME: the room under the shelf for the focused app's name.
   var SAFE_X = 96, SAFE_Y = 54, SAFE_W = 1920 - 2 * SAFE_X, SHELF_NAME = 46;
@@ -316,6 +316,7 @@
   }
 
   function paint(box, top, bottom) {
+    if (/(^| )tile( |$)/.test(box.className)) return;   // shelf tiles keep the one surface (Decision 16)
     box.style.background = '-webkit-linear-gradient(top, ' + top + ', ' + bottom + ')';
     box.style.background = 'linear-gradient(' + top + ', ' + bottom + ')';
   }
@@ -663,10 +664,10 @@
   var shelfFirst = 0, tileStep = 0, tileLeft = 0;
 
   function renderShelf() {
-    var n = Math.min(shelf.length, SHELF_VISIBLE), gap = 48, pad = 40;
-    // 16:9 tiles, as on Android: never taller than 126. Left-aligned in the safe area, with room for the platter's scroll
+    var n = Math.min(shelf.length, SHELF_VISIBLE), gap = 40, pad = 40;
+    // 16:9 tiles, at most 240 x 135. Left-aligned in the safe area, with room for the platter's scroll
     // arrows (pad) and, under the row, for the focused app's name (SHELF_NAME).
-    var tw = Math.min(126 * 16 / 9, (SAFE_W - 2 * pad - Math.max(0, n - 1) * gap) / Math.max(1, n));
+    var tw = Math.min(240, (SAFE_W - 2 * pad - Math.max(0, n - 1) * gap) / Math.max(1, n));
     var th = tw * 9 / 16;
     var width = n * tw + Math.max(0, n - 1) * gap, left = SAFE_X + pad;
     var platter = $('platter'), platterTop = 1080 - SAFE_Y - SHELF_NAME - th - 2 * pad;
