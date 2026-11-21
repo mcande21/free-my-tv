@@ -194,6 +194,19 @@ var CASES = {
       return win.getComputedStyle(line).display === 'none' ? '' : '#weatherline shows with weather off';
     }
   },
+  // Breaks if the no-picks screen has no horizon, if it names no phase, or if nothing is drawn where the ridges are.
+  'horizon-drawn': {
+    setup: function (fixture) { seed({temperature: 'C', language: 'en'}, denverWeather(fixture)); },
+    check: function (win, doc) {
+      var c = doc.getElementById('horizon');
+      if (!c) return 'no #horizon canvas';
+      if (win.getComputedStyle(c).display === 'none' || parseFloat(win.getComputedStyle(c).opacity) === 0) return '#horizon is not shown';
+      var phase = c.getAttribute('data-phase');
+      if (['night', 'dawn', 'day', 'dusk'].indexOf(phase) < 0) return 'data-phase is ' + phase;
+      var px = c.getContext('2d').getImageData(480, 500, 1, 1).data;   // low on the canvas: the near ridge
+      return px[3] === 255 ? '' : 'nothing drawn at (480, 500): alpha ' + px[3];
+    }
+  },
   'harness-loads': {
     check: function (win, doc) {
       return doc.body.classList.contains('no-picks') ? '' : 'body has no no-picks class: ' + doc.body.className;

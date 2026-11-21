@@ -66,7 +66,7 @@ needs Google Chrome and Python 3).
       sunset 16:40: 17:00 -> `dusk`; 17:30 -> `night`; 06:30 -> `dawn`; 12:00 -> `day`; no times at 20:00 ->
       `night`, at 12:00 -> `day`; times 0, NaN or undefined at 12:00 -> `day`. Run, expect FAIL (no web/sun.js) · implement ·
       gate, expect PASS · commit "feat(web): sun phase"
-- [ ] 3.6 horizon canvas (spec: Horizon follows the sun): add `<canvas id="horizon" width="960" height="540">` in
+- [x] 3.6 horizon canvas (spec: Horizon follows the sun): add `<canvas id="horizon" width="960" height="540">` in
       `#sky` and `<script src="sun.js">` before `home.js` in `web/index.html`; in `home.js` `drawHorizon(phase)` draws
       three ridges from a fixed seed and the phase sky, sets `data-phase` on the canvas, redraws only when
       `Sun.phase` changes in the minute tick, and skips drawing when `getContext('2d')` is null. Failing test first:

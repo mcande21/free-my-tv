@@ -610,6 +610,58 @@
     var d = new Date(), c = $('clock');
     c.firstChild.textContent = formatDate('format|h:mm', d.getTime());
     c.lastChild.textContent = formatDate('format|EEEE, MMMM d', d.getTime());
+    updateHorizon();
+  }
+
+  // MARK: - Horizon
+
+  /*
+   * Three ridges of the Front Range under a sky that follows the sun (web/sun.js), drawn on one 960 x 540 canvas that
+   * the stage scales up. Drawn again only when the phase changes: the minute tick and new weather ask, never a frame.
+   */
+  var HORIZON = {
+    night: {sky: ['#0F141B', '#1E2631'], ridges: ['#2A3442', '#1C232D', '#10141A']},
+    dawn: {sky: ['#2A3442', '#C98B6B'], ridges: ['#4A5566', '#323B48', '#1A2029']},
+    day: {sky: ['#E9E4DC', '#D9D2C6'], ridges: ['#C9C2B6', '#B3AC9F', '#9C958A']},
+    dusk: {sky: ['#1E2631', '#E3A15E'], ridges: ['#5A4E5C', '#3A3542', '#1A1D24']}
+  };
+  // Ridge lines as fixed sums of sines (the same skyline every time): base height, then [amplitude, wavelength, shift].
+  var RIDGES = [
+    [318, [[34, 410, 0.3], [18, 170, 1.9], [7, 61, 4.2]]],
+    [372, [[28, 520, 2.4], [14, 140, 0.7], [6, 47, 3.1]]],
+    [430, [[22, 640, 5.1], [11, 120, 2.2], [5, 39, 0.9]]]
+  ];
+  var horizonPhase = '';
+
+  function updateHorizon() {
+    var w = Data.weather, phase = Sun.phase(Date.now(), w ? w.sunrise : 0, w ? w.sunset : 0);
+    if (phase !== horizonPhase) drawHorizon(phase);
+  }
+
+  function drawHorizon(phase) {
+    var canvas = $('horizon'), ctx = canvas.getContext ? canvas.getContext('2d') : null;
+    if (!ctx) return;   // no 2D canvas: the sky's own gradients show, as before
+    var look = HORIZON[phase], W = canvas.width, H = canvas.height;
+    var sky = ctx.createLinearGradient(0, 0, 0, RIDGES[0][0]);
+    sky.addColorStop(0, look.sky[0]);
+    sky.addColorStop(1, look.sky[1]);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+    for (var r = 0; r < RIDGES.length; r++) {
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      for (var x = 0; x <= W; x += 4) {
+        var y = RIDGES[r][0], waves = RIDGES[r][1];
+        for (var k = 0; k < waves.length; k++) y -= waves[k][0] * Math.sin(x / waves[k][1] * 2 * Math.PI + waves[k][2]);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fillStyle = look.ridges[r];
+      ctx.fill();
+    }
+    canvas.setAttribute('data-phase', phase);
+    horizonPhase = phase;
   }
 
   /** On the minute, so the clock never runs late (the 30-second refresh could, by up to 30 s). */
@@ -752,7 +804,7 @@
   function renderWeatherLine() {
     var line = $('weatherline'), w = Data.weather;
     line.innerHTML = '';
-    if (!Prefs.weather() || !w) { line.className = ''; return; }
+    if (!Prefs.weather() || !w) { line.className = ''; updateHorizon(); return; }
     el('span', 'now', line, Data.degrees(w.temp));
     el('span', 'cond', line, Data.condition(w.code, w.isDay));
     for (var i = 0; i < 3 && w.hours && i < w.hours.length; i++) {
@@ -761,6 +813,7 @@
       el('span', 'd', h, Data.degrees(w.hours[i].temp));
     }
     line.className = 'on';
+    updateHorizon();
   }
 
   function renderWeather(card) {
