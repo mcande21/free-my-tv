@@ -1,8 +1,8 @@
 Front Range photographs for the home screen's sky (web/photos), one per sun phase.
 Each was cropped to 16:9 and resized to 1920 x 1080; night.jpg was also extended downward with black to lift the peak above the app row.
-The two CC BY-SA 4.0 photographs (day.jpg, dusk.jpg), as changed here, are shared under CC BY-SA 4.0.
+The two CC BY-SA 4.0 photographs (dawn.jpg, dusk.jpg), as changed here, are shared under CC BY-SA 4.0. All four are JPEG quality 90.
 
-dawn.jpg: "Mt. Evans Sunset (5862299184).jpg" by Zach Dischner. CC BY 2.0 (https://creativecommons.org/licenses/by/2.0). Source: https://commons.wikimedia.org/wiki/File:Mt._Evans_Sunset_(5862299184).jpg
-day.jpg: "Mount Meeker and Longs Peak.jpg" by KamenG. CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Source: https://commons.wikimedia.org/wiki/File:Mount_Meeker_and_Longs_Peak.jpg
+dawn.jpg: "Longs Peak from the Dream Lake trail at sunrise, Rocky Mountain National Park, Colorado, USA.jpg" by OKJaguar. CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Source: https://commons.wikimedia.org/wiki/File:Longs_Peak_from_the_Dream_Lake_trail_at_sunrise,_Rocky_Mountain_National_Park,_Colorado,_USA.jpg
+day.jpg: "Frosted Flatirons (5461428705).jpg" by Zach Dischner. CC BY 2.0 (https://creativecommons.org/licenses/by/2.0). Source: https://commons.wikimedia.org/wiki/File:Frosted_Flatirons_(5461428705).jpg
 dusk.jpg: "Long's Peak Sunset.jpg" by Peter Romero. CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0). Source: https://commons.wikimedia.org/wiki/File:Long%27s_Peak_Sunset.jpg
 night.jpg: "Rocky Mountain National Park, United States (Unsplash pq2DJBntZW0).jpg" by Jeremy Thomas jeremythomasphoto. CC0 (http://creativecommons.org/publicdomain/zero/1.0/deed.en). Source: https://commons.wikimedia.org/wiki/File:Rocky_Mountain_National_Park,_United_States_(Unsplash_pq2DJBntZW0).jpg

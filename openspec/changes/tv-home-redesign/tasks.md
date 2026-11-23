@@ -120,7 +120,7 @@ needs Google Chrome and Python 3).
       tile 0's logo is back at no lift; every tile's box-shadow holds the inset top highlight); run, expect FAIL ·
       change `web/home.css` only · gate, count cases defined vs ran; `motion-props` must still pass · rerun the
       readability measurement · screenshot at dusk for the owner · commit "feat(web): tile depth"
-- [ ] 3.13 sharper photos (Decision 19): fetch the two originals from Commons; crop and resize with a Pillow script
+- [x] 3.13 sharper photos (Decision 19): fetch the two originals from Commons; crop and resize with a Pillow script
       kept in the mission scratch; write `web/photos/dawn.jpg`, `day.jpg` (new) and `dusk.jpg`, `night.jpg` (from the
       quality-90 crops); update `web/photos/CREDITS.txt` for dawn and day. Check: each file 1920 x 1080 and estimated
       quality 90; `backdrop-photo` passes for every phase; readability measurement on all four phases at 3:1 or more;
