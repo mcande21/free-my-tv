@@ -115,7 +115,7 @@ needs Google Chrome and Python 3).
       date 38, label 30; every text box under `#clock`, `#weatherline` and `.tile .label` at 29 px or more); run,
       expect FAIL · change · gate, expect PASS · rerun the readability measurement (Decision 15) on all four phases,
       expect every box at 3:1 or more · commit "feat(web): type steps for the couch"
-- [ ] 3.12 tile depth (Decision 18): failing test first: new case `tile-depth` (focus tile 1: its logo's computed
+- [x] 3.12 tile depth (Decision 18): failing test first: new case `tile-depth` (focus tile 1: its logo's computed
       transform moves it up 4 px and its filter has a drop-shadow; tile 1's box-shadow holds `rgba(6, 10, 16, 0.45)`;
       tile 0's logo is back at no lift; every tile's box-shadow holds the inset top highlight); run, expect FAIL ·
       change `web/home.css` only · gate, count cases defined vs ran; `motion-props` must still pass · rerun the

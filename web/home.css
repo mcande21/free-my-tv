@@ -393,7 +393,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   color: #FFF;
   /* One surface for every app (design Decision 16): smoked slate, a hairline, a white logo on top. */
   background-color: rgba(28, 33, 40, 0.62);
-  box-shadow: inset 0 0 0 1px rgba(236, 230, 220, 0.14), 0 4px 22px rgba(6, 10, 16, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(236, 230, 220, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 22px rgba(6, 10, 16, 0.14);
   -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.2s, opacity 0.3s;
   transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.2s, opacity 0.3s;
 }
@@ -424,22 +424,27 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   left: 0;
   top: 0;
   right: 0;
-  height: 50%;
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  bottom: 0;
+  border-radius: inherit;
+  /* Depth (Decision 18): a light from the top left across the focused tile. */
+  background: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 60%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 60%);
   opacity: 0;
   -webkit-transition: opacity 0.17s;
   transition: opacity 0.17s;
 }
 /* Focus grows the whole tile to 1.08 with an amber ring (the row never moves: its box keeps its width) and shows its
    name under it (Decision 6). */
-.tile.focus { -webkit-transform: scale(1.08); transform: scale(1.08); box-shadow: 0 0 0 3px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.35); z-index: 2; }
+.tile.focus { -webkit-transform: scale(1.08); transform: scale(1.08); box-shadow: 0 0 0 3px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.35), 0 24px 48px rgba(6, 10, 16, 0.45); z-index: 2; }
+/* Depth (Decision 18): the focused logo or name lifts 4 px over its own soft shadow. */
+.tile.focus img { -webkit-transform: translate(-50%, -50%) translateY(-4px); transform: translate(-50%, -50%) translateY(-4px); -webkit-filter: drop-shadow(0 6px 10px rgba(6, 10, 16, 0.5)); filter: drop-shadow(0 6px 10px rgba(6, 10, 16, 0.5)); }
+.tile.focus .word { -webkit-transform: translateY(-4px); transform: translateY(-4px); }
 .tile .label { position: absolute; left: -8%; right: -8%; top: 100%; margin-top: 16px; text-align: center; font-size: 30px; font-weight: 600; color: #1C2128; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; -webkit-transition: opacity 0.22s; transition: opacity 0.22s; }
 .night .tile .label { color: #ECE6DC; }
 .tile.focus .label { opacity: 1; }
 .tile.focus::after { opacity: 1; }
-.night .tile { box-shadow: inset 0 0 0 1px rgba(236, 230, 220, 0.14), 0 4px 22px rgba(6, 10, 16, 0.3); }
-.night .tile.focus { box-shadow: 0 0 0 3px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.3); }
+.night .tile { box-shadow: inset 0 0 0 1px rgba(236, 230, 220, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 22px rgba(6, 10, 16, 0.3); }
+.night .tile.focus { box-shadow: 0 0 0 3px #E3A15E, 0 18px 40px rgba(227, 161, 94, 0.3), 0 24px 48px rgba(6, 10, 16, 0.45); }
 .more { position: absolute; width: 17px; height: 17px; color: rgba(6, 10, 16, 0.6); }
 .more.back { -webkit-transform: scaleX(-1); transform: scaleX(-1); }
 .night .more { color: rgba(255, 255, 255, 0.8); }

@@ -279,6 +279,32 @@ var CASES = {
       return b.top >= a.bottom - 1 ? '' : 'first hour at y ' + Math.round(b.top) + ' is beside the current reading (bottom ' + Math.round(a.bottom) + ')';
     }
   },
+  // Tile depth (Decision 18): breaks if the focused logo does not lift 4 px with a drop shadow, if the logo left behind
+  // stays lifted, if the focused tile has no elevation shadow, or if any tile loses its top-edge highlight.
+  'tile-depth': {
+    still: true,
+    check: function (win, doc) {
+      var tiles = doc.querySelectorAll('#tiles .tile');
+      if (tiles.length < 2) return 'fewer than 2 shelf tiles';
+      function ty(t) { var i = t.querySelector('img'); if (!i) return null; var m = /^matrix\(([^)]+)\)/.exec(win.getComputedStyle(i).transform); return m ? parseFloat(m[1].split(',')[5]) : 0; }
+      var rest1 = ty(tiles[1]);
+      if (rest1 === null) return 'tile 1 has no logo';
+      press(win, doc, 39);
+      return later(400).then(function () {
+        var lift = ty(tiles[1]) - rest1;
+        if (Math.abs(lift + 4) > 0.5) return 'focused logo moved ' + lift + ' px, want -4';
+        if (win.getComputedStyle(tiles[1].querySelector('img')).filter.indexOf('drop-shadow') < 0) return 'focused logo has no drop shadow';
+        var t0 = tiles[0].querySelector('img');
+        if (t0 && win.getComputedStyle(t0).filter.indexOf('drop-shadow') >= 0) return 'tile 0 logo keeps its drop shadow';
+        if (win.getComputedStyle(tiles[1]).boxShadow.indexOf('rgba(6, 10, 16, 0.45) 0px 24px 48px') < 0) return 'focused tile has no elevation shadow: ' + win.getComputedStyle(tiles[1]).boxShadow;
+        for (var i = 0; i < tiles.length; i++) {
+          if (i === 1) continue;
+          if (win.getComputedStyle(tiles[i]).boxShadow.indexOf('rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset') < 0) return 'tile ' + i + ' has no top-edge highlight';
+        }
+        return '';
+      });
+    }
+  },
   // Breaks if the shelf shows other than six tiles at once, if a tile is not 240 px wide, or if tiles differ in surface
   // colour (a brand gradient back on the shelf) (Decision 16).
   'tiles-surface': {
