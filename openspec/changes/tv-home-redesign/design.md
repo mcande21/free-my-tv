@@ -25,7 +25,7 @@ the other surfaces; a UI test that drives the real page.
    `@fontsource/outfit` 5.3.0 and `@fontsource/geist-sans` 5.3.0 (OFL-1.1), latin subset, with `OFL.txt` beside them.
    Inter stays in the stack after Geist (home.css:29 and :671) and its files stay, for Cyrillic, Greek and Vietnamese glyphs the latin subsets lack. Rejected: Inter as the face (the audit's first finding); deleting Inter (other languages would fall to system fonts); a CDN (the app runs offline and from file://).
 3. **Front Range photographs, one per phase** (superseded the canvas ridges; ruling 2026-11-21). An `<img id="horizon">`
-   in `#sky`, full bleed with `object-fit: cover`, shows `photos/<phase>.jpg` (1920 x 1080 JPEG, quality 78, cropped to
+   in `#sky`, full bleed with `object-fit: cover`, shows `photos/<phase>.jpg` (1920 x 1080 JPEG, quality 90 from 2026-11-22, ruling photo-quality; was 78, cropped to
    the peaks). Its `error` handler hides it, so the `#sky .day`/`.night` gradients show. A dark gradient scrim
    (`#scrim`) sits over the photo behind the clock and the shelf, and with a photo shown the home text uses the night
    ink. Photos (Wikimedia Commons): dawn "Mt. Evans Sunset (5862299184).jpg", Zach Dischner, CC BY 2.0; day "Mount
@@ -94,6 +94,13 @@ the other surfaces; a UI test that drives the real page.
    glow; (d) every tile gets `inset 0 1px 0 rgba(255, 255, 255, 0.08)`. Transitions stay transform and opacity.
    Rejected: vanilla-tilt (patching a vendored copy), a moving sweep (busier than asked), brand-tinted glow (second
    accent against ruling tiles-a).
+19. **Sharper photos** (rulings photo-quality, photo-picks, 2026-11-22; the owner saw softness on the 65" TV). Dawn
+   becomes "Longs Peak from the Dream Lake trail at sunrise" (OKJaguar, CC BY-SA 4.0, 8886 x 3668) and day "Frosted
+   Flatirons" (Zach Dischner, CC BY 2.0, 5180 x 3450): both cropped to 16:9 from the original file, resized once with
+   Lanczos to 1920 x 1080, quality 90. Dusk and night ship their existing quality-90 1920 x 1080 crops
+   (scratch/photos-src/*.crop.jpg), same framing. Cause, measured: the old dawn (2048 x 988) and day (2500 x 997) were
+   under 1080 px tall and were enlarged; all four were quality 78. Kept at 1920 x 1080: the app draws a 1920 x 1080
+   stage (web/index.html:5); whether the TV draws images above that is unknown.
 
 ## Measurement method
 
@@ -147,6 +154,8 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 | Every place the font rule lives | `grep -rln Inter web docs` then `grep -rn "'Inter'" web` | web/home.css:12-17 (@font-face), :29 (body), :671 (body.rtl); home.js/tv.js hits are `setInterval`; docs/ out of scope, keeps its own |
 
 ## Rulings
+
+- 2026-11-22: T2 amendment: sharper photos, new dawn and day, quality 90 (Decisions 3 and 19, task 3.13). (Morpheus: "Re-encode + new dawn/day"; picks Dream Lake sunrise and Frosted Flatirons)
 
 - 2026-11-22: T2 amendment: tile depth from tvOS techniques in our CSS (Decision 18; task 3.12 added). (Morpheus: "borrow the technique, goal is simple and elegant")
 
