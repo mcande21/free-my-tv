@@ -86,6 +86,14 @@ the other surfaces; a UI test that drives the real page.
    Clock 160 px Outfit 400 (was 176 px 300); date 38 px Geist 500 (was 40); weather line 32 px on two lines, the
    current reading over the hours; focused app name 30 px Geist 600 (was 24). Nothing on the no-picks home under
    29 px. Adds `web/fonts/Outfit-400.woff2` from `@fontsource/outfit@5.3.0` (latin). Evidence: tv-home-designs.md F3.
+18. **Tile depth, borrowed from tvOS, in our own CSS** (ruling tile-depth, 2026-11-22: simple and elegant; research
+   00_research/tile-libraries.md: no library passes the ES5 gate). Four moves, amber stays the only colour:
+   (a) the focused tile's logo or word lifts 4 px (`translateY(-4px)`) with `drop-shadow(0 6px 10px rgba(6, 10, 16, 0.5))`;
+   (b) `.tile::after` becomes a top-left light over the whole tile, `rgba(255, 255, 255, 0.14)` to 0 at 60%, corners
+   inherited, shown on focus only; (c) the focused tile adds `0 24px 48px rgba(6, 10, 16, 0.45)` under the amber
+   glow; (d) every tile gets `inset 0 1px 0 rgba(255, 255, 255, 0.08)`. Transitions stay transform and opacity.
+   Rejected: vanilla-tilt (patching a vendored copy), a moving sweep (busier than asked), brand-tinted glow (second
+   accent against ruling tiles-a).
 
 ## Measurement method
 
@@ -139,6 +147,8 @@ New identifiers, grepped across `web/`, `tizen/`, `tools/` with `grep -rniw`: `h
 | Every place the font rule lives | `grep -rln Inter web docs` then `grep -rn "'Inter'" web` | web/home.css:12-17 (@font-face), :29 (body), :671 (body.rtl); home.js/tv.js hits are `setInterval`; docs/ out of scope, keeps its own |
 
 ## Rulings
+
+- 2026-11-22: T2 amendment: tile depth from tvOS techniques in our CSS (Decision 18; task 3.12 added). (Morpheus: "borrow the technique, goal is simple and elegant")
 
 - 2026-11-21: T2 amendment: Home button: build 1.5.2 with samsung_home_button=true, release v1.5.2-frontrange, install (Decisions 9 and 13; task 5.4 added). (Morpheus: "go for it" to rebuild, release and install; uninstall still needs his yes)
 
